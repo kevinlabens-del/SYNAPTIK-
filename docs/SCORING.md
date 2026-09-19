@@ -28,4 +28,4 @@ Cette approximation peut mal couvrir les capacités extrêmes. Les résultats de
 
 Difficultés nominales non validées ; gabarits liés ; QCM et hasard ; effet d'apprentissage ; langue ; scolarité ; matériel ; absence d'étalonnage d'âge ; variation du temps de rendu ; vitesse binaire sous deadline plutôt qu'un modèle conjoint temps-précision. Pas d'estimation de facteur g validée. Une SE étroite ne corrige aucune de ces limites.
 
-Référence de méthode (pas validation du produit) : Sharpnack et al., *BanditCAT and AutoIRT*, 2024, https://arxiv.org/abs/2410.21033 — calibration des paramètres, mise à jour bayésienne et sélection informative.
+Référence de méthode (pas validation du produit) : Sharpnack et al., _BanditCAT and AutoIRT_, 2024, https://arxiv.org/abs/2410.21033 — calibration des paramètres, mise à jour bayésienne et sélection informative.

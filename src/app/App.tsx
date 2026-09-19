@@ -1,28 +1,821 @@
-import {useEffect,useMemo,useState} from 'react';
-import {counts,domains,type Domain,type Lang,type Mode,type Session,type Answer} from '../cognitive/types';
-import {estimate,report,selectItem,domainAnswers} from '../cognitive/engine';
-import {makeBank} from '../exercises/bank';
-import * as db from '../storage/store';
-import {labels,names} from './i18n';
-import {Neural} from './Neural';
-import {Exercise} from './Exercise';
-type Page='home'|'setup'|'demo'|'test'|'result'|'history'|'practice'|'method';
-function download(data:unknown,name:string){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-export default function App(){const [lang,setLang]=useState<Lang>('fr');const [page,setPage]=useState<Page>('home');const [sessions,setSessions]=useState<Session[]>([]);const [session,setSession]=useState<Session|null>(null);const [mode,setMode]=useState<Mode>('standard');const [age,setAge]=useState('25–44');const [device,setDevice]=useState('smartphone');const [recent,setRecent]=useState(false);const [consent,setConsent]=useState(false);const [error,setError]=useState('');const [practiceDomain,setPracticeDomain]=useState<Domain>('logic');const [practiceIndex,setPracticeIndex]=useState(0);const [demo,setDemo]=useState(0);const [resumed,setResumed]=useState(false);const [online,setOnline]=useState(navigator.onLine);const bank=useMemo(()=>makeBank(lang),[lang]);const t=labels[lang],fr=lang==='fr';const active=sessions.find(s=>s.status==='active');const r=session?report(session,bank):null;
-useEffect(()=>{db.list().then(setSessions).catch(()=>setError('Stockage indisponible : autorise les données locales.'));const fn=()=>setOnline(navigator.onLine);window.addEventListener('online',fn);window.addEventListener('offline',fn);return()=>{window.removeEventListener('online',fn);window.removeEventListener('offline',fn)}},[]);
-useEffect(()=>{const handler=()=>{if(document.hidden&&session&&page==='test'){const next={...session,interruptions:session.interruptions+1};setSession(next);void db.save(next).catch(()=>setError('Échec de sauvegarde.'))}};document.addEventListener('visibilitychange',handler);return()=>document.removeEventListener('visibilitychange',handler)},[session,page]);
-async function persist(s:Session){try{await db.save(s);setSessions(await db.list());setError('');return true}catch{setError(fr?'Sauvegarde impossible. Garde cette page ouverte et exporte tes données.':'Save failed. Keep this page open and export your data.');return false}}
-async function start(){setResumed(false);const s:Session={id:crypto.randomUUID(),seed:crypto.getRandomValues(new Uint32Array(1))[0],mode,lang,age,device,recent:recent||sessions.some(x=>Date.now()-Date.parse(x.created)<7*86400000),consent,created:new Date().toISOString(),answers:[],interruptions:0,status:'active',testVersion:'1.0',calibrationStatus:'experimental'};s.currentId=selectItem(s,bank)?.id;setSession(s);await persist(s);setPage('test')}
-async function answer(a:Omit<Answer,'theta'>){if(!session)return;setResumed(false);const item=bank.find(i=>i.id===a.itemId)!;const theta=estimate([...domainAnswers(session,bank,item.domain),{...a,theta:0}],bank).theta;const next:Session={...session,answers:[...session.answers,{...a,theta}]};if(next.answers.length>=counts[next.mode]){next.status='complete';next.currentId=undefined}else next.currentId=selectItem(next,bank,sessions.filter(x=>x.id!==next.id).flatMap(x=>x.answers.map(y=>y.itemId)))?.id;setSession(next);await persist(next);if(next.status==='complete')setPage('result')}
-function open(s:Session){setResumed(s.status==='active');setLang(s.lang);setSession(s);setPage(s.status==='complete'?'result':'test')}
-const item=session?bank.find(i=>i.id===session.currentId):undefined;
-return <div className={`shell ${page==='test'?'testing':''}`}><header><a className="brand" href="#" onClick={e=>{e.preventDefault();setPage('home')}}><span className="brand-mark">S</span>SYNAPTIK<span className="brand-sub">COGNITIVE INTELLIGENCE TEST</span></a><nav aria-label="Navigation">{(['home','history','practice','method'] as const).map(p=><button className={page===p?'nav-active':''} key={p} onClick={()=>setPage(p)}>{t[p]}</button>)}</nav><select aria-label="Language" value={lang} disabled={page==='test'||page==='demo'} onChange={e=>setLang(e.target.value as Lang)}><option value="fr">FR</option><option value="en">EN</option></select></header>{error&&<div role="alert" className="warning">{error}<button onClick={()=>download(session,'synaptik-recovery.json')}>Export</button></div>}<main>
-{page==='home'&&<><div className="home-grid"><div className="hero-copy"><p className="eyebrow"><span className="live-dot"/>{t.experimental}</p><h1>Explore the<br/>architecture<br/>of your <em>mind.</em></h1><p className="lead">{fr?'Six dimensions. Une empreinte unique. Explore tes capacités à travers une évaluation qui évolue avec toi.':'Six dimensions. One unique fingerprint. Explore your abilities through an assessment that adapts to you.'}</p><button className="primary" onClick={()=>setPage('setup')}>{t.start}<span>↗</span></button>{active&&<button className="text-button" onClick={()=>open(active)}>{t.resume} · {active.answers.length}/{counts[active.mode]}</button>}<p className="small">{fr?'Estimation expérimentale · Sans valeur diagnostique':'Experimental estimate · No diagnostic value'}</p></div><div className="hero-network"><Neural lang={lang}/><div className="network-caption"><span>01 / NEURAL MAPPING</span><span>{fr?'6 DOMAINES CONNECTÉS':'6 CONNECTED DOMAINS'}</span></div></div></div><div className="domain-strip">{domains.map((d,i)=><button key={d} onClick={()=>{setPracticeDomain(d);setPage('practice')}}><span>0{i+1}</span>{names[lang][d]}<small>{['DEDUCE','ROTATE','RESOLVE','RECALL','CONNECT','PROCESS'][i]}</small></button>)}</div><p className="note">{fr?'SYNAPTIK cartographie une performance sur des exercices originaux. Cette édition ne dispose pas encore de normes humaines permettant de mesurer un QI validé.':'SYNAPTIK maps performance on original tasks. This edition has no human norms for a validated IQ measurement.'}</p></>}
-{page==='setup'&&<section className="reading"><p className="eyebrow">01 / PREPARATION</p><h1>{fr?'Prépare ton exploration.':'Prepare your exploration.'}</h1><p>{fr?'Installe-toi au calme, seul, sans calculatrice ni recherche externe. Les durées sont indicatives ; la vitesse n’est chronométrée strictement que dans son domaine.':'Find a quiet place, work alone, without a calculator or external searches. Durations are indicative; only speed tasks have a strict deadline.'}</p><div className="modes">{(['quick','standard','deep'] as Mode[]).map((m,i)=><button className={mode===m?'selected':''} key={m} onClick={()=>setMode(m)} aria-pressed={mode===m}><span>0{i+1}</span><h2>{m}</h2><p>{['10–15','25–35','45–60'][i]} min</p><small>{counts[m]} {fr?'exercices':'items'}</small></button>)}</div><p className="small">{fr?'Plus de réponses fiables réduisent généralement l’incertitude du modèle, sans remplacer une calibration humaine.':'More reliable responses generally reduce model uncertainty, without replacing human calibration.'}</p><div className="form-grid"><label>{fr?'Tranche d’âge':'Age range'}<select value={age} onChange={e=>setAge(e.target.value)}>{['18–24','25–44','45–64','65+'].map(v=><option key={v}>{v}</option>)}</select></label><label>{fr?'Appareil':'Device'}<select value={device} onChange={e=>setDevice(e.target.value)}>{['smartphone','tablet','computer'].map(v=><option key={v}>{v}</option>)}</select></label></div><p className="small">{fr?'Version expérimentale pour adultes. L’âge est enregistré, mais aucune correction liée à l’âge n’est validée.':'Experimental adult edition. Age is recorded; no age adjustment is validated.'}</p><label className="check"><input type="checkbox" checked={recent} onChange={e=>setRecent(e.target.checked)}/>{fr?'J’ai récemment passé un test similaire.':'I recently completed a similar test.'}</label><label className="check"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>{fr?'Autoriser la préparation d’un export anonyme de calibration. Aucun envoi automatique.':'Allow preparation of an anonymous calibration export. Nothing is sent automatically.'}</label><button className="primary" onClick={()=>{setDemo(0);setPage('demo')}}>{fr?'Découvrir les 3 exercices de démonstration':'Try 3 demonstration exercises'} →</button></section>}
-{page==='demo'&&<section className="test-wrap"><p className="eyebrow">DEMO {demo+1}/3 · {fr?'NON NOTÉE':'NOT SCORED'}</p><Exercise key={demo} lang={lang} practice item={bank.filter(i=>i.domain===(['logic','memory','spatial'] as Domain[])[demo])[0]} onAnswer={()=>{if(demo<2)setDemo(demo+1);else void start()}}/></section>}
-{page==='test'&&session&&item&&<section className="test-wrap"><div className="test-top"><svg viewBox="0 0 100 100" className="progress-ring" aria-label={`${session.answers.length}/${counts[session.mode]}`}>{domains.map((d,k)=><circle key={d} cx="50" cy="50" r="42" fill="none" stroke={domainAnswers(session,bank,d).length?'#54f4ff':'#263043'} strokeWidth="4" pathLength="360" strokeDasharray="48 312" transform={`rotate(${k*60-90} 50 50)`}/>)}<text x="50" y="56" textAnchor="middle">{Math.round(100*session.answers.length/counts[session.mode])}%</text></svg><div><p className="eyebrow">{names[lang][item.domain]} / {fr?'ADAPTATION EN COURS':'CALIBRATING'}</p><p>{session.answers.length+1} / {counts[session.mode]} · {session.mode.toUpperCase()}</p></div><button className="text-button" onClick={()=>setPage('home')}>{fr?'Pause et quitter':'Pause and exit'}</button></div><Exercise key={item.id} item={item} resumed={resumed} lang={lang} onAnswer={a=>void answer(a)}/>{import.meta.env.DEV&&new URLSearchParams(location.search).get('debug')==='true'&&<pre>{JSON.stringify({item:item.id,difficulty:item.difficulty,estimate:estimate(domainAnswers(session,bank,item.domain),bank),history:session.answers.map(a=>a.theta)},null,2)}</pre>}</section>}
-{page==='result'&&session&&r&&<section className="results"><p className="eyebrow">ANALYSIS COMPLETE · {new Date(session.created).toLocaleDateString(lang)}</p><h1>{t.result}</h1><div className="result-grid"><div className="score-panel"><p>SYNAPTIK Cognitive Estimate</p><strong className="big-score">{r.score}</strong><p>{fr?'Équivalent QI expérimental':'Experimental IQ equivalent'}</p><h2>{r.interval[0]}–{r.interval[1]}</h2><p className="small">{fr?'Intervalle conditionnel au modèle à 95 %':'95% model-conditional interval'}</p><div className="metrics"><span><b>{r.percentile}</b>{fr?'percentile théorique':'theoretical percentile'}</span><span><b>{r.reliability.value}/100</b>{fr?'indice de session':'session index'}</span><span><b>{session.answers.length}</b>{fr?'exercices':'items'}</span></div></div><Neural lang={lang} scores={r.profiles.map(p=>p.score)}/></div><div className="warning">{fr?'Aucun groupe de référence humain n’a été utilisé. Le percentile repose sur une distribution normale théorique. L’intervalle ne mesure pas l’erreur inconnue liée à l’absence de calibration. Ce résultat n’est ni un QI clinique ni un diagnostic.':'No human reference group was used. The percentile uses a theoretical normal distribution. The interval does not measure unknown error from missing calibration. This is neither a clinical IQ nor a diagnosis.'}</div>{session.recent&&<p className="warning">{fr?'Effet d’entraînement possible : cette session est proche d’un autre test.':'Possible practice effect: this session is close to another test.'}</p>}<div className="profile-list">{r.profiles.map(p=><article key={p.domain}><span className="eyebrow">{names[lang][p.domain]}</span><h2>{p.score}<small> [{p.interval.join('–')}]</small></h2><div className="meter"><span style={{width:`${p.percentile}%`}}/></div><p>{p.correct}/{p.n} · {Math.round(p.meanTime/1000)} s / {fr?'réponse':'answer'} · P{p.percentile}</p><p className="small">{fr?'Difficulté maximale rencontrée':'Maximum encountered difficulty'} : {p.maxDifficulty}</p></article>)}</div><h2>{fr?'Lecture du profil':'Profile interpretation'}</h2><p>{fr?'Performance relative la plus élevée':'Highest relative performance'} : <b>{names[lang][[...r.profiles].sort((a,b)=>b.score-a.score)[0].domain]}</b>. {fr?'Domaine à explorer davantage':'Domain to explore further'} : <b>{names[lang][[...r.profiles].sort((a,b)=>a.score-b.score)[0].domain]}</b>. {fr?'Les écarts restent descriptifs ; des intervalles qui se recouvrent ne permettent pas de conclure à une différence stable.':'Differences are descriptive; overlapping intervals do not establish stable differences.'}</p><p>{fr?'Signaux de session':'Session signals'} : {r.reliability.rapid} {fr?'réponses très rapides':'very fast responses'}, {session.interruptions} {fr?'interruptions':'interruptions'}. {fr?'Cet indice est heuristique, pas un coefficient de fiabilité psychométrique.':'This index is heuristic, not a psychometric reliability coefficient.'}</p><div className="actions"><button className="primary" onClick={()=>window.print()}>{t.print}</button><button onClick={()=>download(session,'synaptik-session.json')}>Export JSON</button>{session.consent&&<button onClick={()=>download({...session,id:crypto.randomUUID(),created:undefined,device:undefined},'synaptik-calibration.json')}>{fr?'Export de calibration':'Calibration export'}</button>}</div></section>}
-{page==='history'&&<section className="reading"><p className="eyebrow">MY COGNITIVE HISTORY</p><h1>{t.history}</h1><p>{fr?'Compare les sessions avec prudence : apprentissage, fatigue et appareil peuvent modifier les résultats.':'Compare sessions cautiously: learning, fatigue and device can affect results.'}</p>{!sessions.length&&<div className="empty"><h2>{fr?'Ta carte reste à explorer.':'Your map is still unexplored.'}</h2><button className="primary" onClick={()=>setPage('setup')}>{t.start}</button></div>}{[...sessions].reverse().map(s=>{const rr=report(s,makeBank(s.lang));return <article className="history-row" key={s.id}><button onClick={()=>open(s)}><span>{new Date(s.created).toLocaleString(lang)} · {s.mode}</span><strong>{s.status==='complete'?rr.score:'↻'}</strong><small>{s.status==='complete'?`${rr.interval.join('–')} · P${rr.percentile} · ${rr.reliability.value}/100`:`${s.answers.length}/${counts[s.mode]}`}</small><small>{rr.profiles.map(p=>`${names[lang][p.domain]} ${p.score}`).join(' · ')}</small></button><button aria-label={fr?'Supprimer cette session':'Delete session'} onClick={async()=>{if(confirm(fr?'Supprimer cette session ?':'Delete this session?')){await db.remove(s.id);setSessions(await db.list())}}}>×</button></article>})}<div className="actions"><button onClick={()=>download(sessions,'synaptik-history.json')}>{fr?'Exporter toutes mes données':'Export all data'}</button><button onClick={async()=>{if(confirm(fr?'Effacer définitivement toutes les sessions locales ?':'Permanently erase all local sessions?')){await db.clear();setSessions([]);setSession(null)}}}>{fr?'Tout effacer':'Erase all'}</button></div></section>}
-{page==='practice'&&<section className="test-wrap"><p className="eyebrow">PRACTICE LAB · {fr?'SANS INFLUENCE SUR LES SCORES':'DOES NOT AFFECT ASSESSMENT SCORES'}</p><h1>{t.practice}</h1><div className="domain-tabs">{domains.map(d=><button className={d===practiceDomain?'selected':''} key={d} onClick={()=>{setPracticeDomain(d);setPracticeIndex(0)}}>{names[lang][d]}</button>)}</div><Exercise key={`${practiceDomain}-${practiceIndex}-${lang}`} lang={lang} practice item={bank.filter(i=>i.domain===practiceDomain)[practiceIndex%60]} onAnswer={()=>setPracticeIndex(practiceIndex+1)}/></section>}
-{page==='method'&&<section className="reading"><p className="eyebrow">SCIENCE / TRANSPARENCY</p><h1>{fr?'Une carte. Pas une étiquette.':'A map. Not a label.'}</h1><h2>{fr?'Comment fonctionne SYNAPTIK ?':'How does SYNAPTIK work?'}</h2><p>{fr?'Chaque domaine possède une capacité latente estimée par une grille bayésienne. La sélection recherche des exercices informatifs proches du niveau estimé. Les paramètres de difficulté et de discrimination sont provisoires et non mesurés sur des humains.':'Each domain has a latent ability estimated using a Bayesian grid. Selection targets informative items near estimated ability. Difficulty and discrimination parameters are provisional, not measured on people.'}</p><h2>{fr?'Scores et incertitude':'Scores and uncertainty'}</h2><p>{fr?'La transformation 100 + 15 × theta fournit une échelle expérimentale. Le percentile vient de la loi normale standard, pas d’une population observée. L’incertitude statistique est conditionnelle aux paramètres supposés. Les sous-scores ont un poids égal ; la rapidité ne bonifie jamais les réponses incorrectes.':'The transformation 100 + 15 × theta provides an experimental scale. Percentiles come from a standard normal distribution, not an observed population. Statistical uncertainty is conditional on assumed parameters. Domains have equal weights; speed never rewards incorrect answers.'}</p><h2>{fr?'Données privées':'Private data'}</h2><p>{fr?'Tout reste dans IndexedDB sur cet appareil. Aucun traceur, compte, serveur de résultats ni collecte automatique. Effacer les données du navigateur supprime aussi les sessions. Un export volontaire peut être préparé pour une future calibration.':'Everything stays in IndexedDB on this device. No trackers, accounts, results server or automatic collection. Clearing browser data also removes sessions. A voluntary export can be prepared for future calibration.'}</p><h2>{fr?'Limites connues':'Known limitations'}</h2><p>{fr?'Banque générée : 360 variantes par langue, plusieurs gabarits réutilisés. Les variantes ne sont pas 360 concepts indépendants. Les items verbaux anglais et français nécessitent une validation humaine séparée. Les normes par âge, l’équivalence entre appareils et la validité clinique ne sont pas établies.':'Generated bank: 360 variants per language, with repeated templates. Variants are not 360 independent concepts. English and French verbal items require separate human validation. Age norms, device equivalence and clinical validity are not established.'}</p>{import.meta.env.DEV&&<><h2>Developer / calibration</h2><pre>{JSON.stringify({items:bank.length,domains:domains.map(d=>({domain:d,n:bank.filter(i=>i.domain===d).length})),calibrationStatus:'experimental',sampleSize:0},null,2)}</pre></>}</section>}
-</main><footer><span>SYNAPTIK <b> / </b> COGNITIVE INTELLIGENCE TEST</span><span>{online?t.local:(fr?'HORS LIGNE · DONNÉES LOCALES':'OFFLINE · LOCAL DATA')}</span><small>{fr?'Expérimental · Non clinique':'Experimental · Non-clinical'}</small></footer></div>}
+import { useEffect, useMemo, useState } from "react";
+import {
+  counts,
+  domains,
+  type Domain,
+  type Lang,
+  type Mode,
+  type Session,
+  type Answer,
+} from "../cognitive/types";
+import {
+  estimate,
+  report,
+  selectItem,
+  domainAnswers,
+} from "../cognitive/engine";
+import { makeBank } from "../exercises/bank";
+import * as db from "../storage/store";
+import { labels, names } from "./i18n";
+import { Neural } from "./Neural";
+import { Exercise } from "./Exercise";
+type Page =
+  | "home"
+  | "setup"
+  | "demo"
+  | "test"
+  | "result"
+  | "history"
+  | "practice"
+  | "method";
+function download(data: unknown, name: string) {
+  const url = URL.createObjectURL(
+    new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
+  );
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+export default function App() {
+  const [lang, setLang] = useState<Lang>("fr");
+  const [page, setPage] = useState<Page>("home");
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [session, setSession] = useState<Session | null>(null);
+  const [mode, setMode] = useState<Mode>("standard");
+  const [age, setAge] = useState("25–44");
+  const [device, setDevice] = useState("smartphone");
+  const [recent, setRecent] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [error, setError] = useState("");
+  const [practiceDomain, setPracticeDomain] = useState<Domain>("logic");
+  const [practiceIndex, setPracticeIndex] = useState(0);
+  const [demo, setDemo] = useState(0);
+  const [resumed, setResumed] = useState(false);
+  const [online, setOnline] = useState(navigator.onLine);
+  const bank = useMemo(() => makeBank(lang), [lang]);
+  const t = labels[lang],
+    fr = lang === "fr";
+  const active = sessions.find((s) => s.status === "active");
+  const r = session ? report(session, bank) : null;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.lang = lang;
+  }, [page, lang]);
+  useEffect(() => {
+    db.list()
+      .then(setSessions)
+      .catch(() =>
+        setError("Stockage indisponible : autorise les données locales."),
+      );
+    const fn = () => setOnline(navigator.onLine);
+    window.addEventListener("online", fn);
+    window.addEventListener("offline", fn);
+    return () => {
+      window.removeEventListener("online", fn);
+      window.removeEventListener("offline", fn);
+    };
+  }, []);
+  useEffect(() => {
+    const handler = () => {
+      if (document.hidden && session && page === "test") {
+        const next = { ...session, interruptions: session.interruptions + 1 };
+        setSession(next);
+        void db.save(next).catch(() => setError("Échec de sauvegarde."));
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, [session, page]);
+  async function persist(s: Session) {
+    try {
+      await db.save(s);
+      setSessions(await db.list());
+      setError("");
+      return true;
+    } catch {
+      setError(
+        fr
+          ? "Sauvegarde impossible. Garde cette page ouverte et exporte tes données."
+          : "Save failed. Keep this page open and export your data.",
+      );
+      return false;
+    }
+  }
+  async function start() {
+    setResumed(false);
+    const s: Session = {
+      id: crypto.randomUUID(),
+      seed: crypto.getRandomValues(new Uint32Array(1))[0],
+      mode,
+      lang,
+      age,
+      device,
+      recent:
+        recent ||
+        sessions.some((x) => Date.now() - Date.parse(x.created) < 7 * 86400000),
+      consent,
+      created: new Date().toISOString(),
+      answers: [],
+      interruptions: 0,
+      status: "active",
+      testVersion: "1.0",
+      calibrationStatus: "experimental",
+    };
+    s.currentId = selectItem(s, bank)?.id;
+    setSession(s);
+    await persist(s);
+    setPage("test");
+  }
+  async function answer(a: Omit<Answer, "theta">) {
+    if (!session) return;
+    setResumed(false);
+    const item = bank.find((i) => i.id === a.itemId)!;
+    const theta = estimate(
+      [...domainAnswers(session, bank, item.domain), { ...a, theta: 0 }],
+      bank,
+    ).theta;
+    const next: Session = {
+      ...session,
+      answers: [...session.answers, { ...a, theta }],
+    };
+    if (next.answers.length >= counts[next.mode]) {
+      next.status = "complete";
+      next.currentId = undefined;
+    } else
+      next.currentId = selectItem(
+        next,
+        bank,
+        sessions
+          .filter((x) => x.id !== next.id)
+          .flatMap((x) => x.answers.map((y) => y.itemId)),
+      )?.id;
+    setSession(next);
+    await persist(next);
+    if (next.status === "complete") setPage("result");
+  }
+  function open(s: Session) {
+    setResumed(s.status === "active");
+    setLang(s.lang);
+    setSession(s);
+    setPage(s.status === "complete" ? "result" : "test");
+  }
+  const item = session
+    ? bank.find((i) => i.id === session.currentId)
+    : undefined;
+  return (
+    <div className={`shell ${page === "test" ? "testing" : ""}`}>
+      <header>
+        <a
+          className="brand"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setPage("home");
+          }}
+        >
+          <span className="brand-mark">S</span>SYNAPTIK
+          <span className="brand-sub">COGNITIVE INTELLIGENCE TEST</span>
+        </a>
+        <nav aria-label="Navigation">
+          {(["home", "history", "practice", "method"] as const).map((p) => (
+            <button
+              className={page === p ? "nav-active" : ""}
+              key={p}
+              onClick={() => setPage(p)}
+            >
+              {t[p]}
+            </button>
+          ))}
+        </nav>
+        <select
+          aria-label="Language"
+          value={lang}
+          disabled={page === "test" || page === "demo"}
+          onChange={(e) => setLang(e.target.value as Lang)}
+        >
+          <option value="fr">FR</option>
+          <option value="en">EN</option>
+        </select>
+      </header>
+      {error && (
+        <div role="alert" className="warning">
+          {error}
+          <button onClick={() => download(session, "synaptik-recovery.json")}>
+            Export
+          </button>
+        </div>
+      )}
+      <main>
+        {page === "home" && (
+          <>
+            <div className="home-grid">
+              <div className="hero-copy">
+                <p className="eyebrow">
+                  <span className="live-dot" />
+                  {t.experimental}
+                </p>
+                <h1>
+                  Explore the
+                  <br />
+                  architecture
+                  <br />
+                  of your <em>mind.</em>
+                </h1>
+                <p className="lead">
+                  {fr
+                    ? "Six dimensions. Une empreinte unique. Explore tes capacités à travers une évaluation qui évolue avec toi."
+                    : "Six dimensions. One unique fingerprint. Explore your abilities through an assessment that adapts to you."}
+                </p>
+                <button className="primary" onClick={() => setPage("setup")}>
+                  {t.start}
+                  <span>↗</span>
+                </button>
+                {active && (
+                  <button className="text-button" onClick={() => open(active)}>
+                    {t.resume} · {active.answers.length}/{counts[active.mode]}
+                  </button>
+                )}
+                <p className="small">
+                  {fr
+                    ? "Estimation expérimentale · Sans valeur diagnostique"
+                    : "Experimental estimate · No diagnostic value"}
+                </p>
+              </div>
+              <div className="hero-network">
+                <Neural lang={lang} />
+                <div className="network-caption">
+                  <span>01 / NEURAL MAPPING</span>
+                  <span>
+                    {fr ? "6 DOMAINES CONNECTÉS" : "6 CONNECTED DOMAINS"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="domain-strip">
+              {domains.map((d, i) => (
+                <button
+                  key={d}
+                  onClick={() => {
+                    setPracticeDomain(d);
+                    setPage("practice");
+                  }}
+                >
+                  <span>0{i + 1}</span>
+                  {names[lang][d]}
+                  <small>
+                    {
+                      [
+                        "DEDUCE",
+                        "ROTATE",
+                        "RESOLVE",
+                        "RECALL",
+                        "CONNECT",
+                        "PROCESS",
+                      ][i]
+                    }
+                  </small>
+                </button>
+              ))}
+            </div>
+            <p className="note">
+              {fr
+                ? "SYNAPTIK cartographie une performance sur des exercices originaux. Cette édition ne dispose pas encore de normes humaines permettant de mesurer un QI validé."
+                : "SYNAPTIK maps performance on original tasks. This edition has no human norms for a validated IQ measurement."}
+            </p>
+          </>
+        )}
+        {page === "setup" && (
+          <section className="reading">
+            <p className="eyebrow">01 / PREPARATION</p>
+            <h1>
+              {fr ? "Prépare ton exploration." : "Prepare your exploration."}
+            </h1>
+            <p>
+              {fr
+                ? "Installe-toi au calme, seul, sans calculatrice ni recherche externe. Les durées sont indicatives ; la vitesse n’est chronométrée strictement que dans son domaine."
+                : "Find a quiet place, work alone, without a calculator or external searches. Durations are indicative; only speed tasks have a strict deadline."}
+            </p>
+            <div className="modes">
+              {(["quick", "standard", "deep"] as Mode[]).map((m, i) => (
+                <button
+                  className={mode === m ? "selected" : ""}
+                  key={m}
+                  onClick={() => setMode(m)}
+                  aria-pressed={mode === m}
+                >
+                  <span>0{i + 1}</span>
+                  <h2>{m}</h2>
+                  <p>{["10–15", "25–35", "45–60"][i]} min</p>
+                  <small>
+                    {counts[m]} {fr ? "exercices" : "items"}
+                  </small>
+                </button>
+              ))}
+            </div>
+            <p className="small">
+              {fr
+                ? "Plus de réponses fiables réduisent généralement l’incertitude du modèle, sans remplacer une calibration humaine."
+                : "More reliable responses generally reduce model uncertainty, without replacing human calibration."}
+            </p>
+            <div className="form-grid">
+              <label>
+                {fr ? "Tranche d’âge" : "Age range"}
+                <select value={age} onChange={(e) => setAge(e.target.value)}>
+                  {["18–24", "25–44", "45–64", "65+"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                {fr ? "Appareil" : "Device"}
+                <select
+                  value={device}
+                  onChange={(e) => setDevice(e.target.value)}
+                >
+                  {["smartphone", "tablet", "computer"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <p className="small">
+              {fr
+                ? "Version expérimentale pour adultes. L’âge est enregistré, mais aucune correction liée à l’âge n’est validée."
+                : "Experimental adult edition. Age is recorded; no age adjustment is validated."}
+            </p>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={recent}
+                onChange={(e) => setRecent(e.target.checked)}
+              />
+              {fr
+                ? "J’ai récemment passé un test similaire."
+                : "I recently completed a similar test."}
+            </label>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+              />
+              {fr
+                ? "Autoriser la préparation d’un export anonyme de calibration. Aucun envoi automatique."
+                : "Allow preparation of an anonymous calibration export. Nothing is sent automatically."}
+            </label>
+            <button
+              className="primary"
+              onClick={() => {
+                setDemo(0);
+                setPage("demo");
+              }}
+            >
+              {fr
+                ? "Découvrir les 3 exercices de démonstration"
+                : "Try 3 demonstration exercises"}{" "}
+              →
+            </button>
+          </section>
+        )}
+        {page === "demo" && (
+          <section className="test-wrap">
+            <p className="eyebrow">
+              DEMO {demo + 1}/3 · {fr ? "NON NOTÉE" : "NOT SCORED"}
+            </p>
+            <Exercise
+              key={demo}
+              lang={lang}
+              practice
+              item={
+                bank.filter(
+                  (i) =>
+                    i.domain ===
+                    (["logic", "memory", "spatial"] as Domain[])[demo],
+                )[0]
+              }
+              onAnswer={() => {
+                if (demo < 2) setDemo(demo + 1);
+                else void start();
+              }}
+            />
+          </section>
+        )}
+        {page === "test" && session && item && (
+          <section className="test-wrap">
+            <div className="test-top">
+              <svg
+                viewBox="0 0 100 100"
+                className="progress-ring"
+                aria-label={`${session.answers.length}/${counts[session.mode]}`}
+              >
+                {domains.map((d, k) => (
+                  <circle
+                    key={d}
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke={
+                      domainAnswers(session, bank, d).length
+                        ? "#54f4ff"
+                        : "#263043"
+                    }
+                    strokeWidth="4"
+                    pathLength="360"
+                    strokeDasharray="48 312"
+                    transform={`rotate(${k * 60 - 90} 50 50)`}
+                  />
+                ))}
+                <text x="50" y="56" textAnchor="middle">
+                  {Math.round(
+                    (100 * session.answers.length) / counts[session.mode],
+                  )}
+                  %
+                </text>
+              </svg>
+              <div>
+                <p className="eyebrow">
+                  {names[lang][item.domain]} /{" "}
+                  {fr ? "ADAPTATION EN COURS" : "CALIBRATING"}
+                </p>
+                <p>
+                  {session.answers.length + 1} / {counts[session.mode]} ·{" "}
+                  {session.mode.toUpperCase()}
+                </p>
+              </div>
+              <button className="text-button" onClick={() => setPage("home")}>
+                {fr ? "Pause et quitter" : "Pause and exit"}
+              </button>
+            </div>
+            <Exercise
+              key={item.id}
+              item={item}
+              resumed={resumed}
+              lang={lang}
+              onAnswer={(a) => void answer(a)}
+            />
+            {import.meta.env.DEV &&
+              new URLSearchParams(location.search).get("debug") === "true" && (
+                <pre>
+                  {JSON.stringify(
+                    {
+                      item: item.id,
+                      difficulty: item.difficulty,
+                      estimate: estimate(
+                        domainAnswers(session, bank, item.domain),
+                        bank,
+                      ),
+                      history: session.answers.map((a) => a.theta),
+                    },
+                    null,
+                    2,
+                  )}
+                </pre>
+              )}
+          </section>
+        )}
+        {page === "result" && session && r && (
+          <section className="results">
+            <p className="eyebrow">
+              ANALYSIS COMPLETE ·{" "}
+              {new Date(session.created).toLocaleDateString(lang)}
+            </p>
+            <h1>{t.result}</h1>
+            <div className="result-grid">
+              <div className="score-panel">
+                <p>SYNAPTIK Cognitive Estimate</p>
+                <strong className="big-score">{r.score}</strong>
+                <p>
+                  {fr
+                    ? "Équivalent QI expérimental"
+                    : "Experimental IQ equivalent"}
+                </p>
+                <h2>
+                  {r.interval[0]}–{r.interval[1]}
+                </h2>
+                <p className="small">
+                  {fr
+                    ? "Intervalle conditionnel au modèle à 95 %"
+                    : "95% model-conditional interval"}
+                </p>
+                <div className="metrics">
+                  <span>
+                    <b>{r.percentile}</b>
+                    {fr ? "percentile théorique" : "theoretical percentile"}
+                  </span>
+                  <span>
+                    <b>{r.reliability.value}/100</b>
+                    {fr ? "indice de session" : "session index"}
+                  </span>
+                  <span>
+                    <b>{session.answers.length}</b>
+                    {fr ? "exercices" : "items"}
+                  </span>
+                </div>
+              </div>
+              <Neural lang={lang} scores={r.profiles.map((p) => p.score)} />
+            </div>
+            <div className="warning">
+              {fr
+                ? "Aucun groupe de référence humain n’a été utilisé. Le percentile repose sur une distribution normale théorique. L’intervalle ne mesure pas l’erreur inconnue liée à l’absence de calibration. Ce résultat n’est ni un QI clinique ni un diagnostic."
+                : "No human reference group was used. The percentile uses a theoretical normal distribution. The interval does not measure unknown error from missing calibration. This is neither a clinical IQ nor a diagnosis."}
+            </div>
+            {session.recent && (
+              <p className="warning">
+                {fr
+                  ? "Effet d’entraînement possible : cette session est proche d’un autre test."
+                  : "Possible practice effect: this session is close to another test."}
+              </p>
+            )}
+            <div className="profile-list">
+              {r.profiles.map((p) => (
+                <article key={p.domain}>
+                  <span className="eyebrow">{names[lang][p.domain]}</span>
+                  <h2>
+                    {p.score}
+                    <small> [{p.interval.join("–")}]</small>
+                  </h2>
+                  <div className="meter">
+                    <span style={{ width: `${p.percentile}%` }} />
+                  </div>
+                  <p>
+                    {p.correct}/{p.n} · {Math.round(p.meanTime / 1000)} s /{" "}
+                    {fr ? "réponse" : "answer"} · P{p.percentile}
+                  </p>
+                  <p className="small">
+                    {fr
+                      ? "Difficulté maximale rencontrée"
+                      : "Maximum encountered difficulty"}{" "}
+                    : {p.maxDifficulty}
+                  </p>
+                </article>
+              ))}
+            </div>
+            <h2>{fr ? "Lecture du profil" : "Profile interpretation"}</h2>
+            <p>
+              {fr
+                ? "Performance relative la plus élevée"
+                : "Highest relative performance"}{" "}
+              :{" "}
+              <b>
+                {
+                  names[lang][
+                    [...r.profiles].sort((a, b) => b.score - a.score)[0].domain
+                  ]
+                }
+              </b>
+              .{" "}
+              {fr
+                ? "Domaine à explorer davantage"
+                : "Domain to explore further"}{" "}
+              :{" "}
+              <b>
+                {
+                  names[lang][
+                    [...r.profiles].sort((a, b) => a.score - b.score)[0].domain
+                  ]
+                }
+              </b>
+              .{" "}
+              {fr
+                ? "Les écarts restent descriptifs ; des intervalles qui se recouvrent ne permettent pas de conclure à une différence stable."
+                : "Differences are descriptive; overlapping intervals do not establish stable differences."}
+            </p>
+            <p>
+              {fr ? "Signaux de session" : "Session signals"} :{" "}
+              {r.reliability.rapid}{" "}
+              {fr ? "réponses très rapides" : "very fast responses"},{" "}
+              {session.interruptions} {fr ? "interruptions" : "interruptions"}.{" "}
+              {fr
+                ? "Cet indice est heuristique, pas un coefficient de fiabilité psychométrique."
+                : "This index is heuristic, not a psychometric reliability coefficient."}
+            </p>
+            <div className="actions">
+              <button className="primary" onClick={() => window.print()}>
+                {t.print}
+              </button>
+              <button
+                onClick={() => download(session, "synaptik-session.json")}
+              >
+                Export JSON
+              </button>
+              {session.consent && (
+                <button
+                  onClick={() =>
+                    download(
+                      {
+                        ...session,
+                        id: crypto.randomUUID(),
+                        created: undefined,
+                        device: undefined,
+                      },
+                      "synaptik-calibration.json",
+                    )
+                  }
+                >
+                  {fr ? "Export de calibration" : "Calibration export"}
+                </button>
+              )}
+            </div>
+          </section>
+        )}
+        {page === "history" && (
+          <section className="reading">
+            <p className="eyebrow">MY COGNITIVE HISTORY</p>
+            <h1>{t.history}</h1>
+            <p>
+              {fr
+                ? "Compare les sessions avec prudence : apprentissage, fatigue et appareil peuvent modifier les résultats."
+                : "Compare sessions cautiously: learning, fatigue and device can affect results."}
+            </p>
+            {!sessions.length && (
+              <div className="empty">
+                <h2>
+                  {fr
+                    ? "Ta carte reste à explorer."
+                    : "Your map is still unexplored."}
+                </h2>
+                <button className="primary" onClick={() => setPage("setup")}>
+                  {t.start}
+                </button>
+              </div>
+            )}
+            {[...sessions].reverse().map((s) => {
+              const rr = report(s, makeBank(s.lang));
+              return (
+                <article className="history-row" key={s.id}>
+                  <button onClick={() => open(s)}>
+                    <span>
+                      {new Date(s.created).toLocaleString(lang)} · {s.mode}
+                    </span>
+                    <strong>{s.status === "complete" ? rr.score : "↻"}</strong>
+                    <small>
+                      {s.status === "complete"
+                        ? `${rr.interval.join("–")} · P${rr.percentile} · ${rr.reliability.value}/100`
+                        : `${s.answers.length}/${counts[s.mode]}`}
+                    </small>
+                    <small>
+                      {rr.profiles
+                        .map((p) => `${names[lang][p.domain]} ${p.score}`)
+                        .join(" · ")}
+                    </small>
+                  </button>
+                  <button
+                    aria-label={
+                      fr ? "Supprimer cette session" : "Delete session"
+                    }
+                    onClick={async () => {
+                      if (
+                        confirm(
+                          fr
+                            ? "Supprimer cette session ?"
+                            : "Delete this session?",
+                        )
+                      ) {
+                        await db.remove(s.id);
+                        setSessions(await db.list());
+                      }
+                    }}
+                  >
+                    ×
+                  </button>
+                </article>
+              );
+            })}
+            <div className="actions">
+              <button
+                onClick={() => download(sessions, "synaptik-history.json")}
+              >
+                {fr ? "Exporter toutes mes données" : "Export all data"}
+              </button>
+              <button
+                onClick={async () => {
+                  if (
+                    confirm(
+                      fr
+                        ? "Effacer définitivement toutes les sessions locales ?"
+                        : "Permanently erase all local sessions?",
+                    )
+                  ) {
+                    await db.clear();
+                    setSessions([]);
+                    setSession(null);
+                  }
+                }}
+              >
+                {fr ? "Tout effacer" : "Erase all"}
+              </button>
+            </div>
+          </section>
+        )}
+        {page === "practice" && (
+          <section className="test-wrap">
+            <p className="eyebrow">
+              PRACTICE LAB ·{" "}
+              {fr
+                ? "SANS INFLUENCE SUR LES SCORES"
+                : "DOES NOT AFFECT ASSESSMENT SCORES"}
+            </p>
+            <h1>{t.practice}</h1>
+            <div className="domain-tabs">
+              {domains.map((d) => (
+                <button
+                  className={d === practiceDomain ? "selected" : ""}
+                  key={d}
+                  onClick={() => {
+                    setPracticeDomain(d);
+                    setPracticeIndex(0);
+                  }}
+                >
+                  {names[lang][d]}
+                </button>
+              ))}
+            </div>
+            <Exercise
+              key={`${practiceDomain}-${practiceIndex}-${lang}`}
+              lang={lang}
+              practice
+              item={
+                bank.filter((i) => i.domain === practiceDomain)[
+                  practiceIndex % 60
+                ]
+              }
+              onAnswer={() => setPracticeIndex(practiceIndex + 1)}
+            />
+          </section>
+        )}
+        {page === "method" && (
+          <section className="reading">
+            <p className="eyebrow">SCIENCE / TRANSPARENCY</p>
+            <h1>
+              {fr ? "Une carte. Pas une étiquette." : "A map. Not a label."}
+            </h1>
+            <h2>
+              {fr ? "Comment fonctionne SYNAPTIK ?" : "How does SYNAPTIK work?"}
+            </h2>
+            <p>
+              {fr
+                ? "Chaque domaine possède une capacité latente estimée par une grille bayésienne. La sélection recherche des exercices informatifs proches du niveau estimé. Les paramètres de difficulté et de discrimination sont provisoires et non mesurés sur des humains."
+                : "Each domain has a latent ability estimated using a Bayesian grid. Selection targets informative items near estimated ability. Difficulty and discrimination parameters are provisional, not measured on people."}
+            </p>
+            <h2>{fr ? "Scores et incertitude" : "Scores and uncertainty"}</h2>
+            <p>
+              {fr
+                ? "La transformation 100 + 15 × theta fournit une échelle expérimentale. Le percentile vient de la loi normale standard, pas d’une population observée. L’incertitude statistique est conditionnelle aux paramètres supposés. Les sous-scores ont un poids égal ; la rapidité ne bonifie jamais les réponses incorrectes."
+                : "The transformation 100 + 15 × theta provides an experimental scale. Percentiles come from a standard normal distribution, not an observed population. Statistical uncertainty is conditional on assumed parameters. Domains have equal weights; speed never rewards incorrect answers."}
+            </p>
+            <h2>{fr ? "Données privées" : "Private data"}</h2>
+            <p>
+              {fr
+                ? "Tout reste dans IndexedDB sur cet appareil. Aucun traceur, compte, serveur de résultats ni collecte automatique. Effacer les données du navigateur supprime aussi les sessions. Un export volontaire peut être préparé pour une future calibration."
+                : "Everything stays in IndexedDB on this device. No trackers, accounts, results server or automatic collection. Clearing browser data also removes sessions. A voluntary export can be prepared for future calibration."}
+            </p>
+            <h2>{fr ? "Limites connues" : "Known limitations"}</h2>
+            <p>
+              {fr
+                ? "Banque générée : 360 variantes par langue, plusieurs gabarits réutilisés. Les variantes ne sont pas 360 concepts indépendants. Les items verbaux anglais et français nécessitent une validation humaine séparée. Les normes par âge, l’équivalence entre appareils et la validité clinique ne sont pas établies."
+                : "Generated bank: 360 variants per language, with repeated templates. Variants are not 360 independent concepts. English and French verbal items require separate human validation. Age norms, device equivalence and clinical validity are not established."}
+            </p>
+            {import.meta.env.DEV && (
+              <>
+                <h2>Developer / calibration</h2>
+                <pre>
+                  {JSON.stringify(
+                    {
+                      items: bank.length,
+                      domains: domains.map((d) => ({
+                        domain: d,
+                        n: bank.filter((i) => i.domain === d).length,
+                      })),
+                      calibrationStatus: "experimental",
+                      sampleSize: 0,
+                    },
+                    null,
+                    2,
+                  )}
+                </pre>
+              </>
+            )}
+          </section>
+        )}
+      </main>
+      <footer>
+        <span>
+          SYNAPTIK <b> / </b> COGNITIVE INTELLIGENCE TEST
+        </span>
+        <span>
+          {online
+            ? t.local
+            : fr
+              ? "HORS LIGNE · DONNÉES LOCALES"
+              : "OFFLINE · LOCAL DATA"}
+        </span>
+        <small>
+          {fr ? "Expérimental · Non clinique" : "Experimental · Non-clinical"}
+        </small>
+      </footer>
+    </div>
+  );
+}

@@ -1,1 +1,52 @@
-.neural{width:100%;overflow:visible}.orbit{fill:none;stroke:#27495e;stroke-width:.65;stroke-dasharray:2 9}.synapse{stroke:#2499b0;stroke-width:1;fill:none;opacity:.7}.node{fill:var(--cyan);filter:drop-shadow(0 0 7px #54f4ff)}.node-halo{fill:#142539;stroke:#244657;stroke-width:1}.core{fill:#09222b;stroke:#54f4ff;stroke-width:1;filter:drop-shadow(0 0 20px #00c8ff55)}.neural text{fill:#8fa9bc;font:12px monospace;letter-spacing:1.5px}.neural .core-text{fill:var(--cyan);font-size:32px}.neural .micro{font-size:9px;letter-spacing:3px}.live-dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:var(--cyan);margin-right:12px}
+.neural {
+  width: 100%;
+  overflow: visible;
+}
+.orbit {
+  fill: none;
+  stroke: #27495e;
+  stroke-width: 0.65;
+  stroke-dasharray: 2 9;
+}
+.synapse {
+  stroke: #2499b0;
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.7;
+}
+.node {
+  fill: var(--cyan);
+  filter: drop-shadow(0 0 7px #54f4ff);
+}
+.node-halo {
+  fill: #142539;
+  stroke: #244657;
+  stroke-width: 1;
+}
+.core {
+  fill: #09222b;
+  stroke: #54f4ff;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 20px #00c8ff55);
+}
+.neural text {
+  fill: #8fa9bc;
+  font: 12px monospace;
+  letter-spacing: 1.5px;
+}
+.neural .core-text {
+  fill: var(--cyan);
+  font-size: 32px;
+}
+.neural .micro {
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  border-radius: 50%;
+  background: var(--cyan);
+  margin-right: 12px;
+}

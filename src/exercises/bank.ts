@@ -1,12 +1,329 @@
-import {random} from '../cognitive/engine';
-import {domains,type Item,type Lang} from '../cognitive/types';
-const pairsFR=[['oiseau','nid','abeille','ruche'],['peintre','pinceau','écrivain','stylo'],['pied','chaussure','main','gant'],['jour','nuit','chaud','froid'],['graine','plante','œuf','poussin'],['livre','lire','musique','écouter'],['clé','serrure','mot de passe','compte'],['poisson','eau','oiseau','air'],['minute','heure','jour','semaine'],['dent','mâcher','œil','voir'],['tissu','coudre','bois','scier'],['question','réponse','problème','solution'],['médecin','soigner','enseignant','enseigner'],['pluie','mouillé','soleil','éclairé'],['bateau','port','avion','aéroport'],['racine','arbre','fondation','maison'],['silence','son','obscurité','lumière'],['faim','manger','soif','boire'],['thermomètre','température','balance','masse'],['chapitre','livre','scène','pièce']];
-const pairsEN=[['bird','nest','bee','hive'],['painter','brush','writer','pen'],['foot','shoe','hand','glove'],['day','night','hot','cold'],['seed','plant','egg','chick'],['book','read','music','listen'],['key','lock','password','account'],['fish','water','bird','air'],['minute','hour','day','week'],['tooth','chew','eye','see'],['cloth','sew','wood','saw'],['question','answer','problem','solution'],['doctor','heal','teacher','teach'],['rain','wet','sun','lit'],['boat','harbour','plane','airport'],['root','tree','foundation','house'],['silence','sound','darkness','light'],['hunger','eat','thirst','drink'],['thermometer','temperature','scale','mass'],['chapter','book','scene','play']];
-export function makeBank(lang:Lang):Item[]{const fr=lang==='fr';const bank:Item[]=[];for(const [di,domain] of domains.entries())for(let k=0;k<60;k++){const rng=random(1223+di*10000+k);const level=k%5;const a=2+Math.floor(rng()*17),step=2+Math.floor(rng()*8);let prompt='',correct='',others:string[]=[],explanation='',subtype='';let stimulus:string|undefined,exposureMs:number|undefined,shape:number[]|undefined,rotation:number|undefined;
-if(domain==='numeric'){subtype=['progression','proportion','alternating'][k%3];if(k%3===0){const seq=Array.from({length:4},(_,j)=>a+step*j+(level>2?j*j:0));correct=String(a+step*4+(level>2?16:0));prompt=`${seq.join(' · ')} · ?`;explanation=fr?'Observe les différences successives.':'Inspect successive differences.'}else if(k%3===1){prompt=fr?`${a} objets occupent ${a*step} cases. Combien de cases pour ${a+level+2} objets identiques ?`:`${a} objects occupy ${a*step} cells. How many cells for ${a+level+2} identical objects?`;correct=String((a+level+2)*step);explanation=`× ${step}`}else{prompt=`${a} · ${a+step} · ${a+1} · ${a+step+1} · ${a+2} · ?`;correct=String(a+step+2);explanation=fr?'Deux suites alternées augmentent de 1.':'Two interleaved sequences increase by 1.'}others=[-step,-1,2].map(v=>String(+correct+v))}
-if(domain==='logic'){subtype=['conditional','symbol-rule','order'][k%3];if(k%3===0){const names=[`A${a}`,`B${step}`,`C${k}`];prompt=fr?`Tous les ${names[0]} sont ${names[1]}. Aucun ${names[1]} n’est ${names[2]}. Que peut-on conclure ?`:`All ${names[0]} are ${names[1]}. No ${names[1]} is ${names[2]}. What follows?`;correct=fr?`Aucun ${names[0]} n’est ${names[2]}`:`No ${names[0]} is ${names[2]}`;others=fr?[`Tous les ${names[2]} sont ${names[0]}`,`Certains ${names[0]} sont ${names[2]}`,'Impossible à déduire']:[`All ${names[2]} are ${names[0]}`,`Some ${names[0]} are ${names[2]}`,'Cannot be deduced'];explanation=fr?'La première catégorie est contenue dans une catégorie excluant la troisième.':'The first set is contained in a set disjoint from the third.'}else if(k%3===1){prompt=`◇ ${a} → ${a*2+level} ; ◇ ${a+2} → ${(a+2)*2+level} ; ◇ ${a+5} → ?`;correct=String((a+5)*2+level);others=[-2,1,3].map(x=>String(+correct+x));explanation=`× 2 + ${level}`}else{prompt=fr?`K${a} arrive avant M${step}. T${k} arrive après M${step}. Qui arrive en premier ?`:`K${a} arrives before M${step}. T${k} arrives after M${step}. Who arrives first?`;correct=`K${a}`;others=[`M${step}`,`T${k}`,fr?'Indéterminé':'Undetermined'];explanation=`K${a} → M${step} → T${k}`}}
-if(domain==='spatial'){subtype=k%2?'reflection':'rotation';const x=1+Math.floor(rng()*3),y=1+Math.floor(rng()*3);shape=[x,y];rotation=k%2?0:90*(1+k%3);prompt=fr?(k%2?'Reflète le point par rapport à l’axe vertical. Où arrive-t-il ?':`Tourne le point de ${rotation}° dans le sens antihoraire autour du centre. Où arrive-t-il ?`):(k%2?'Reflect the point across the vertical axis. Where does it land?':`Rotate the point ${rotation}° counterclockwise around the centre. Where does it land?`);let u=x,v=y;if(k%2)u=-x;else for(let j=0;j<rotation!/90;j++){[u,v]=[-v,u]}correct=`(${u}, ${v})`;others=[`(${-u}, ${v})`,`(${u}, ${-v})`,`(${-u}, ${-v})`];explanation=fr?'Le centre et les axes restent fixes pendant la transformation.':'The origin and axes stay fixed during transformation.'}
-if(domain==='memory'){subtype=k%2?'reverse-digits':'digit-sequence';const seq=Array.from({length:3+level},()=>String(Math.floor(rng()*10)));stimulus=seq.join(' ');exposureMs=1800+seq.length*500;prompt=fr?(k%2?'Retrouve la séquence dans l’ordre inverse.':'Retrouve la séquence dans le même ordre.'):(k%2?'Recall the sequence in reverse order.':'Recall the sequence in the same order.');const target=k%2?[...seq].reverse():seq;correct=target.join(' ');others=[0,1,2].map((_,j)=>target.map((n,i)=>i===j?String((+n+1+j)%10):n).join(' '));explanation=correct}
-if(domain==='verbal'){const p=(fr?pairsFR:pairsEN)[k%20];subtype=k<20?'analogy':k<40?'relation':'completion';prompt=k<20?`${p[0]} → ${p[1]} ; ${p[2]} → ?`:k<40?(fr?`Quelle relation complète : « ${p[2]} est à … ce que ${p[0]} est à ${p[1]} » ?`:`Complete: “${p[2]} is to … as ${p[0]} is to ${p[1]}.”`):(fr?`Complète la paire correspondante : ${p[0]} / ${p[1]} ; ${p[2]} / …`:`Complete the corresponding pair: ${p[0]} / ${p[1]} ; ${p[2]} / …`);correct=p[3];others=[1,7,13].map(v=>(fr?pairsFR:pairsEN)[(k+v)%20][3]);explanation=fr?'Les deux paires expriment une relation analogue.':'Both pairs express an analogous relationship.'}
-if(domain==='speed'){subtype=k%2?'symbol-match':'visual-search';const chars=['◇','○','□','△','+','×'];stimulus=Array.from({length:6+level*2},()=>chars[Math.floor(rng()*6)]).join(' ');if(k%2){const same=k%4===1;const comparison=same?stimulus:stimulus.slice(0,-1)+(stimulus.endsWith('◇')?'○':'◇');prompt=fr?'Les deux lignes sont-elles identiques ?':'Are the two lines identical?';stimulus+='\n'+comparison;correct=fr?(same?'Identiques':'Différentes'):(same?'Identical':'Different');others=[fr?(same?'Différentes':'Identiques'):(same?'Different':'Identical')]}else{prompt=fr?'Combien de symboles ◇ vois-tu ?':'How many ◇ symbols are there?';correct=String(stimulus.split(' ').filter(v=>v==='◇').length);others=[1,2,3].map(v=>String(+correct+v))}explanation=fr?'Compare ou compte soigneusement les symboles.':'Carefully compare or count the symbols.'}
-const options=[...new Set([correct,...others])].map(v=>({v,r:rng()})).sort((a,b)=>a.r-b.r).map(x=>x.v);bank.push({id:`${lang}-${(di*1000+k+173).toString(36)}`,lang,domain,subtype,difficulty:-2+level,discrimination:1,guessing:1/options.length,estimatedTime:domain==='speed'?8:domain==='memory'?20:45,prompt,options,correctAnswer:options.indexOf(correct),explanation,tags:[subtype,'generated'],version:'1.0',sampleSize:0,successRate:null,averageResponseTime:null,pointBiserialCorrelation:null,enabled:true,stimulus,exposureMs,shape,rotation})}return bank}
+import { advancedItem } from "./advanced";
+import { spatialPattern, memoryVariant } from "./visual";
+import { verbalItem } from "./verbal";
+import { random } from "../cognitive/engine";
+import { domains, type Item, type Lang } from "../cognitive/types";
+const pairsFR = [
+  ["oiseau", "nid", "abeille", "ruche"],
+  ["peintre", "pinceau", "écrivain", "stylo"],
+  ["pied", "chaussure", "main", "gant"],
+  ["jour", "nuit", "chaud", "froid"],
+  ["graine", "plante", "œuf", "poussin"],
+  ["livre", "lire", "musique", "écouter"],
+  ["clé", "serrure", "mot de passe", "compte"],
+  ["poisson", "eau", "oiseau", "air"],
+  ["minute", "heure", "jour", "semaine"],
+  ["dent", "mâcher", "œil", "voir"],
+  ["tissu", "coudre", "bois", "scier"],
+  ["question", "réponse", "problème", "solution"],
+  ["médecin", "soigner", "enseignant", "enseigner"],
+  ["pluie", "mouillé", "soleil", "éclairé"],
+  ["bateau", "port", "avion", "aéroport"],
+  ["racine", "arbre", "fondation", "maison"],
+  ["silence", "son", "obscurité", "lumière"],
+  ["faim", "manger", "soif", "boire"],
+  ["thermomètre", "température", "balance", "masse"],
+  ["chapitre", "livre", "scène", "pièce"],
+];
+const pairsEN = [
+  ["bird", "nest", "bee", "hive"],
+  ["painter", "brush", "writer", "pen"],
+  ["foot", "shoe", "hand", "glove"],
+  ["day", "night", "hot", "cold"],
+  ["seed", "plant", "egg", "chick"],
+  ["book", "read", "music", "listen"],
+  ["key", "lock", "password", "account"],
+  ["fish", "water", "bird", "air"],
+  ["minute", "hour", "day", "week"],
+  ["tooth", "chew", "eye", "see"],
+  ["cloth", "sew", "wood", "saw"],
+  ["question", "answer", "problem", "solution"],
+  ["doctor", "heal", "teacher", "teach"],
+  ["rain", "wet", "sun", "lit"],
+  ["boat", "harbour", "plane", "airport"],
+  ["root", "tree", "foundation", "house"],
+  ["silence", "sound", "darkness", "light"],
+  ["hunger", "eat", "thirst", "drink"],
+  ["thermometer", "temperature", "scale", "mass"],
+  ["chapter", "book", "scene", "play"],
+];
+export function makeBank(lang: Lang): Item[] {
+  const fr = lang === "fr";
+  const bank: Item[] = [];
+  for (const [di, domain] of domains.entries())
+    for (let k = 0; k < 60; k++) {
+      const rng = random(1223 + di * 10000 + k);
+      const level = k % 5;
+      const a = 2 + Math.floor(rng() * 17),
+        step = 2 + Math.floor(rng() * 8);
+      let prompt = "",
+        correct = "",
+        others: string[] = [],
+        explanation = "",
+        subtype = "";
+      let shapeCells: number[] | undefined, visualOptions: "grid" | undefined;
+      let stimulus: string | undefined,
+        exposureMs: number | undefined,
+        shape: number[] | undefined,
+        rotation: number | undefined;
+      if (domain === "numeric") {
+        subtype = ["progression", "proportion", "alternating"][k % 3];
+        if (k % 3 === 0) {
+          const seq = Array.from(
+            { length: 4 },
+            (_, j) => a + step * j + (level > 2 ? j * j : 0),
+          );
+          correct = String(a + step * 4 + (level > 2 ? 16 : 0));
+          prompt = `${seq.join(" · ")} · ?`;
+          explanation = fr
+            ? "Observe les différences successives."
+            : "Inspect successive differences.";
+        } else if (k % 3 === 1) {
+          prompt = fr
+            ? `${a} objets occupent ${a * step} cases. Combien de cases pour ${a + level + 2} objets identiques ?`
+            : `${a} objects occupy ${a * step} cells. How many cells for ${a + level + 2} identical objects?`;
+          correct = String((a + level + 2) * step);
+          explanation = `× ${step}`;
+        } else {
+          prompt = `${a} · ${a + step} · ${a + 1} · ${a + step + 1} · ${a + 2} · ?`;
+          correct = String(a + step + 2);
+          explanation = fr
+            ? "Deux suites alternées augmentent de 1."
+            : "Two interleaved sequences increase by 1.";
+        }
+        others = [-step, -1, 2].map((v) => String(+correct + v));
+      }
+      if (domain === "logic") {
+        subtype = ["conditional", "symbol-rule", "order"][k % 3];
+        if (k % 3 === 0) {
+          const names = [`A${a}`, `B${step}`, `C${k}`];
+          prompt = fr
+            ? `Tous les ${names[0]} sont ${names[1]}. Aucun ${names[1]} n’est ${names[2]}. Que peut-on conclure ?`
+            : `All ${names[0]} are ${names[1]}. No ${names[1]} is ${names[2]}. What follows?`;
+          correct = fr
+            ? `Aucun ${names[0]} n’est ${names[2]}`
+            : `No ${names[0]} is ${names[2]}`;
+          others = fr
+            ? [
+                `Tous les ${names[2]} sont ${names[0]}`,
+                `Certains ${names[0]} sont ${names[2]}`,
+                "Impossible à déduire",
+              ]
+            : [
+                `All ${names[2]} are ${names[0]}`,
+                `Some ${names[0]} are ${names[2]}`,
+                "Cannot be deduced",
+              ];
+          explanation = fr
+            ? "La première catégorie est contenue dans une catégorie excluant la troisième."
+            : "The first set is contained in a set disjoint from the third.";
+        } else if (k % 3 === 1) {
+          prompt = `◇ ${a} → ${a * 2 + level} ; ◇ ${a + 2} → ${(a + 2) * 2 + level} ; ◇ ${a + 5} → ?`;
+          correct = String((a + 5) * 2 + level);
+          others = [-2, 1, 3].map((x) => String(+correct + x));
+          explanation = `× 2 + ${level}`;
+        } else {
+          prompt = fr
+            ? `K${a} arrive avant M${step}. T${k} arrive après M${step}. Qui arrive en premier ?`
+            : `K${a} arrives before M${step}. T${k} arrives after M${step}. Who arrives first?`;
+          correct = `K${a}`;
+          others = [`M${step}`, `T${k}`, fr ? "Indéterminé" : "Undetermined"];
+          explanation = `K${a} → M${step} → T${k}`;
+        }
+      }
+      if (domain === "spatial") {
+        subtype = k % 2 ? "reflection" : "rotation";
+        const x = 1 + Math.floor(rng() * 3),
+          y = 1 + Math.floor(rng() * 3);
+        shape = [x, y];
+        rotation = k % 2 ? 0 : 90 * (1 + (k % 3));
+        prompt = fr
+          ? k % 2
+            ? "Reflète le point par rapport à l’axe vertical. Où arrive-t-il ?"
+            : `Tourne le point de ${rotation}° dans le sens antihoraire autour du centre. Où arrive-t-il ?`
+          : k % 2
+            ? "Reflect the point across the vertical axis. Where does it land?"
+            : `Rotate the point ${rotation}° counterclockwise around the centre. Where does it land?`;
+        let u = x,
+          v = y;
+        if (k % 2) u = -x;
+        else
+          for (let j = 0; j < rotation! / 90; j++) {
+            [u, v] = [-v, u];
+          }
+        correct = `(${u}, ${v})`;
+        others = [`(${-u}, ${v})`, `(${u}, ${-v})`, `(${-u}, ${-v})`];
+        explanation = fr
+          ? "Le centre et les axes restent fixes pendant la transformation."
+          : "The origin and axes stay fixed during transformation.";
+      }
+      if (domain === "memory") {
+        subtype = k % 2 ? "reverse-digits" : "digit-sequence";
+        const seq = Array.from({ length: 3 + level }, () =>
+          String(Math.floor(rng() * 10)),
+        );
+        stimulus = seq.join(" ");
+        exposureMs = 1800 + seq.length * 500;
+        prompt = fr
+          ? k % 2
+            ? "Retrouve la séquence dans l’ordre inverse."
+            : "Retrouve la séquence dans le même ordre."
+          : k % 2
+            ? "Recall the sequence in reverse order."
+            : "Recall the sequence in the same order.";
+        const target = k % 2 ? [...seq].reverse() : seq;
+        correct = target.join(" ");
+        others = [0, 1, 2].map((_, j) =>
+          target
+            .map((n, i) => (i === j ? String((+n + 1 + j) % 10) : n))
+            .join(" "),
+        );
+        explanation = correct;
+      }
+      if (domain === "verbal") {
+        const p = (fr ? pairsFR : pairsEN)[k % 20];
+        subtype = k < 20 ? "analogy" : k < 40 ? "relation" : "completion";
+        prompt =
+          k < 20
+            ? `${p[0]} → ${p[1]} ; ${p[2]} → ?`
+            : k < 40
+              ? fr
+                ? `Quelle relation complète : « ${p[2]} est à … ce que ${p[0]} est à ${p[1]} » ?`
+                : `Complete: “${p[2]} is to … as ${p[0]} is to ${p[1]}.”`
+              : fr
+                ? `Complète la paire correspondante : ${p[0]} / ${p[1]} ; ${p[2]} / …`
+                : `Complete the corresponding pair: ${p[0]} / ${p[1]} ; ${p[2]} / …`;
+        correct = p[3];
+        others = [1, 7, 13].map(
+          (v) => (fr ? pairsFR : pairsEN)[(k + v) % 20][3],
+        );
+        explanation = fr
+          ? "Les deux paires expriment une relation analogue."
+          : "Both pairs express an analogous relationship.";
+      }
+      if (domain === "speed") {
+        subtype = k % 2 ? "symbol-match" : "visual-search";
+        const chars = ["◇", "○", "□", "△", "+", "×"];
+        stimulus = Array.from(
+          { length: 6 + level * 2 },
+          () => chars[Math.floor(rng() * 6)],
+        ).join(" ");
+        if (k % 2) {
+          const same = k % 4 === 1;
+          const comparison = same
+            ? stimulus
+            : stimulus.slice(0, -1) + (stimulus.endsWith("◇") ? "○" : "◇");
+          prompt = fr
+            ? "Les deux lignes sont-elles identiques ?"
+            : "Are the two lines identical?";
+          stimulus += "\n" + comparison;
+          correct = fr
+            ? same
+              ? "Identiques"
+              : "Différentes"
+            : same
+              ? "Identical"
+              : "Different";
+          others = [
+            fr
+              ? same
+                ? "Différentes"
+                : "Identiques"
+              : same
+                ? "Different"
+                : "Identical",
+          ];
+        } else {
+          prompt = fr
+            ? "Combien de symboles ◇ vois-tu ?"
+            : "How many ◇ symbols are there?";
+          correct = String(stimulus.split(" ").filter((v) => v === "◇").length);
+          others = [1, 2, 3].map((v) => String(+correct + v));
+        }
+        explanation = fr
+          ? "Compare ou compte soigneusement les symboles."
+          : "Carefully compare or count the symbols.";
+      }
+      if (domain === "verbal" && k >= 20) {
+        ({ prompt, correct, others, explanation, subtype } = verbalItem(
+          lang,
+          k,
+        ));
+      }
+      if (domain === "spatial" && k >= 20) {
+        ({
+          prompt,
+          correct,
+          others,
+          explanation,
+          subtype,
+          shapeCells,
+          visualOptions,
+        } = spatialPattern(lang, k));
+        shape = undefined;
+      }
+      if (domain === "memory" && k >= 30) {
+        const variant = memoryVariant(lang, k);
+        ({ prompt, correct, others, explanation, subtype, exposureMs } =
+          variant);
+        stimulus = "stimulus" in variant ? variant.stimulus : undefined;
+        shapeCells = "shapeCells" in variant ? variant.shapeCells : undefined;
+        visualOptions =
+          "visualOptions" in variant ? variant.visualOptions : undefined;
+      }
+      const advanced = advancedItem(lang, domain, k);
+      if (advanced.correct !== undefined) {
+        correct = advanced.correct;
+        others = advanced.others!;
+        prompt = advanced.prompt!;
+        subtype = advanced.subtype!;
+        explanation = advanced.explanation!;
+        if (domain === "memory") {
+          stimulus = undefined;
+          shapeCells = undefined;
+          visualOptions = undefined;
+          exposureMs = advanced.exposureMs;
+        }
+        if (domain === "spatial") {
+          shape = undefined;
+          shapeCells = undefined;
+          visualOptions = undefined;
+        }
+      }
+      const options = [...new Set([correct, ...others])]
+        .map((v) => ({ v, r: rng() }))
+        .sort((a, b) => a.r - b.r)
+        .map((x) => x.v);
+      bank.push({
+        id: `${lang}-${(di * 1000 + k + 173).toString(36)}`,
+        lang,
+        domain,
+        subtype,
+        difficulty: -2 + level,
+        discrimination: 1,
+        guessing: 1 / options.length,
+        estimatedTime: domain === "speed" ? 8 : domain === "memory" ? 20 : 45,
+        prompt,
+        options,
+        correctAnswer: options.indexOf(correct),
+        explanation,
+        tags: [subtype, "generated"],
+        version: "1.0",
+        sampleSize: 0,
+        successRate: null,
+        averageResponseTime: null,
+        pointBiserialCorrelation: null,
+        enabled: true,
+        stimulus,
+        exposureMs,
+        shape,
+        rotation,
+        shapeCells,
+        visualOptions,
+        sequence: advanced.sequence,
+        matrix: advanced.matrix,
+        cubes: advanced.cubes,
+      });
+    }
+  return bank;
+}

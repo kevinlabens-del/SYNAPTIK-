@@ -1,3 +1,49 @@
-import type {Lang,Domain} from '../cognitive/types';
-export const names:Record<Lang,Record<Domain,string>>={fr:{logic:'Logique',spatial:'Spatial',numeric:'Numérique',memory:'Mémoire',verbal:'Verbal',speed:'Vitesse'},en:{logic:'Logic',spatial:'Spatial',numeric:'Numeric',memory:'Memory',verbal:'Verbal',speed:'Speed'}};
-export const labels={fr:{home:'Exploration',history:'Mes résultats',practice:'Entraînement',method:'Méthodologie',start:'BEGIN ANALYSIS',local:'LOCAL FIRST · AUCUNE TRANSMISSION',next:'Valider ma réponse',resume:'Reprendre mon évaluation',experimental:'ÉDITION EXPÉRIMENTALE / 01',back:'Retour',result:'Votre empreinte cognitive',print:'Exporter mon rapport / PDF'},en:{home:'Explore',history:'My results',practice:'Practice',method:'Methodology',start:'BEGIN ANALYSIS',local:'LOCAL FIRST · NO TRANSMISSION',next:'Confirm answer',resume:'Resume cognitive assessment',experimental:'EXPERIMENTAL EDITION / 01',back:'Back',result:'Your cognitive fingerprint',print:'Export report / PDF'}};
+import type { Lang, Domain } from "../cognitive/types";
+export const names: Record<Lang, Record<Domain, string>> = {
+  fr: {
+    logic: "Logique",
+    spatial: "Spatial",
+    numeric: "Numérique",
+    memory: "Mémoire",
+    verbal: "Verbal",
+    speed: "Vitesse",
+  },
+  en: {
+    logic: "Logic",
+    spatial: "Spatial",
+    numeric: "Numeric",
+    memory: "Memory",
+    verbal: "Verbal",
+    speed: "Speed",
+  },
+};
+export const labels = {
+  fr: {
+    home: "Exploration",
+    history: "Mes résultats",
+    practice: "Entraînement",
+    method: "Méthodologie",
+    start: "BEGIN ANALYSIS",
+    local: "LOCAL FIRST · AUCUNE TRANSMISSION",
+    next: "Valider ma réponse",
+    resume: "Reprendre mon évaluation",
+    experimental: "ÉDITION EXPÉRIMENTALE / 01",
+    back: "Retour",
+    result: "Votre empreinte cognitive",
+    print: "Exporter mon rapport / PDF",
+  },
+  en: {
+    home: "Explore",
+    history: "My results",
+    practice: "Practice",
+    method: "Methodology",
+    start: "BEGIN ANALYSIS",
+    local: "LOCAL FIRST · NO TRANSMISSION",
+    next: "Confirm answer",
+    resume: "Resume cognitive assessment",
+    experimental: "EXPERIMENTAL EDITION / 01",
+    back: "Back",
+    result: "Your cognitive fingerprint",
+    print: "Export report / PDF",
+  },
+};
