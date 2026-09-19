@@ -4,8 +4,8 @@
 
 | Domaine   | Familles implémentées                                                                                                   |
 | --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Logique   | inclusion/exclusion conditionnelle, transformation symbolique, ordre                                                    |
-| Spatial   | rotation/réflexion de motifs 3×3 et de points avec coordonnées                                                          |
+| Logique   | inclusion/exclusion conditionnelle, transformation symbolique, ordre, matrices originales                               |
+| Spatial   | rotation/réflexion de motifs 3×3 et de points avec coordonnées, colonnes de cubes isométriques                          |
 | Numérique | suites arithmétiques/secondes différences, proportion, suites alternées                                                 |
 | Mémoire   | chiffres directs/inversés, associations lettre-chiffre, motifs de positions, présentation temporaire, 2-back séquentiel |
 | Verbal    | analogies lexicales, catégorisation, signification contextuelle                                                         |
@@ -18,3 +18,5 @@ Les banques verbales sont déclarées par langue ; leurs relations sont actuelle
 Les familles assemblages complexes, vues 3D interactives, matrices à règles multiples, inhibition et planification ne sont pas encore implémentées. Leur ajout nécessite des renderers dédiés et un audit d'ambiguïté. Cette limite est explicite plutôt que remplacée par des items artificiellement renommés.
 
 Originaux générés pour ce projet ; aucune banque commerciale importée. Une revue humaine indépendante est nécessaire avant d'employer le terme « validé ».
+
+Audit de contenu : 312 signatures distinctes par langue sur 360 variantes (prompt, options triées et contenu visuel/mémoire). Le sélecteur exclut les contenus identiques déjà présentés dans la session, même avec un autre ID. Le test Deep vérifie 120 sélections sans répétition de contenu. La dépendance sémantique entre gabarits proches demeure une limite distincte.

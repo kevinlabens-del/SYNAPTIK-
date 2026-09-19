@@ -2,6 +2,8 @@
 
 Explore the architecture of your mind.
 
+**Application en ligne : https://kevinlabens-del.github.io/SYNAPTIK-/**
+
 Application React/TypeScript/Vite expérimentale, local first, FR/EN. Six domaines, sélection adaptative, trois formats (36/72/120 items), démonstrations, entraînement indépendant, sauvegarde IndexedDB, historique, rapport imprimable, export JSON et service worker.
 
 ## Exécution
@@ -22,7 +24,7 @@ npm run simulate
 
 ## GitHub Pages
 
-Dans Settings → Pages, choisir **GitHub Actions**, puis exécuter **Deploy SYNAPTIK Pages** depuis Actions. Le workflow de validation s'exécute automatiquement à chaque push et publie un artefact compilé. Le déploiement Pages est volontairement distinct de la validation.
+GitHub Pages est activé avec **GitHub Actions**. Pour republier, exécuter **Deploy SYNAPTIK Pages** depuis Actions. Le workflow de validation s'exécute automatiquement à chaque push et publie un artefact compilé. Le déploiement Pages est volontairement distinct de la validation.
 
 ## Ce que signifie le score
 

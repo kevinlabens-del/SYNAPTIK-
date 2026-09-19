@@ -556,6 +556,13 @@ export default function App() {
                       : "Maximum encountered difficulty"}{" "}
                     : {p.maxDifficulty}
                   </p>
+                  <p className="small">
+                    {fr ? "Variation des temps (CV)" : "Timing variation (CV)"}{" "}
+                    :{" "}
+                    {p.timingCV === null
+                      ? "—"
+                      : `${Math.round(p.timingCV * 100)} %`}
+                  </p>
                 </article>
               ))}
             </div>

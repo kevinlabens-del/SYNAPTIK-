@@ -82,12 +82,32 @@ export function information(t: number, i: Item) {
   const dp = (1 - i.guessing) * i.discrimination * l * (1 - l);
   return (dp * dp) / (p * (1 - p));
 }
+export function itemFingerprint(i: Item) {
+  return JSON.stringify([
+    i.prompt,
+    [...i.options].sort(),
+    i.stimulus,
+    i.shape,
+    i.shapeCells,
+    i.matrix,
+    i.cubes,
+    i.sequence,
+  ]);
+}
 export function selectItem(s: Session, bank: Item[], previous: string[] = []) {
   const used = new Set(s.answers.map((a) => a.itemId));
+  const usedContent = new Set(
+    bank.filter((i) => used.has(i.id)).map(itemFingerprint),
+  );
   const d = domains[s.answers.length % 6];
   const e = estimate(domainAnswers(s, bank, d), bank);
   const candidates = bank.filter(
-    (i) => i.enabled && i.lang === s.lang && i.domain === d && !used.has(i.id),
+    (i) =>
+      i.enabled &&
+      i.lang === s.lang &&
+      i.domain === d &&
+      !used.has(i.id) &&
+      !usedContent.has(itemFingerprint(i)),
   );
   const rng = random(s.seed + s.answers.length * 7919);
   return candidates

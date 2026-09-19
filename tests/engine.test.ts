@@ -162,3 +162,21 @@ describe("visual geometry", () => {
     }
   });
 });
+
+import { itemFingerprint } from "../src/cognitive/engine";
+describe("item exposure integrity", () => {
+  it("provides at least 300 distinct exercises and no identical content in Deep", () => {
+    expect(new Set(bank.map(itemFingerprint)).size).toBeGreaterThanOrEqual(300);
+    const s = fresh();
+    s.mode = "deep";
+    const seen = new Set<string>();
+    for (let n = 0; n < 120; n++) {
+      const i = selectItem(s, bank);
+      expect(i).toBeDefined();
+      const signature = itemFingerprint(i!);
+      expect(seen.has(signature)).toBe(false);
+      seen.add(signature);
+      s.answers.push(response(i!.id, n % 3 !== 0));
+    }
+  });
+});

@@ -21,3 +21,13 @@ Validation humaine, fidélité clinique, exactitude du QI, normes par âge, équ
 ## Exécution GitHub confirmée
 
 Run `35446755812`, commit `c9088c7` : **réussi**. Les 7 tests Chromium passent, dont les six tailles et le parcours complet avec rechargement hors ligne. Installation, ESLint, 11 tests unitaires et build réussis. Artefacts : browser-validation et synaptik-dist.
+
+## Dernière version publiée
+
+Commit applicatif `81802158591e1a17779531f4da3cc9912925abd9` : validation réussie dans le run `35446921216`. Les résultats sont aussi vérifiés aux six tailles ; le changement de langue conserve le score. Déploiement GitHub Pages réussi dans le run `35446998045`.
+
+URL vérifiée : https://kevinlabens-del.github.io/SYNAPTIK-/
+
+Inspection du site publié : capture de l'accueil desktop, ouverture de la préparation, contenu et bouton d'installation visibles. Aucune erreur JavaScript de l'application observée ; des erreurs du script d'extension du navigateur de contrôle ont été distinguées de celles de l'application. Les captures mobiles sont produites par la CI ; aucun essai sur téléphone Android physique ni résultat Lighthouse n'est revendiqué.
+
+Audit final de répétition : 12 tests unitaires passent après ajout d'une vérification des 312 exercices distincts et des 120 sélections Deep sans répétition exacte. Les temps par domaine incluent un coefficient de variation descriptif.
