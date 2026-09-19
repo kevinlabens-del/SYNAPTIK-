@@ -53,6 +53,9 @@ export interface Answer {
   changes: number;
   interrupted: boolean;
   theta: number;
+  excluded?: boolean;
+  selectionTime?: number;
+  timedOut?: boolean;
 }
 export interface Session {
   id: string;

@@ -180,3 +180,62 @@ describe("item exposure integrity", () => {
     }
   });
 });
+
+describe("version 1.1 measurement integrity", () => {
+  it("excluded interrupted answers contribute neither information nor success", () => {
+    const item = bank[0];
+    const excluded = {
+      ...response(item.id, true),
+      interrupted: true,
+      excluded: true,
+    };
+    expect(estimate([excluded], bank)).toEqual(estimate([], bank));
+    const s = fresh();
+    s.testVersion = "1.1";
+    s.answers = [excluded];
+    expect(report(s, bank).validCount).toBe(0);
+    expect(report(s, bank).profiles[0].correct).toBe(0);
+  });
+  it("posterior quantiles enclose the estimate and capture asymmetry", () => {
+    const e = estimate(
+      bank
+        .filter((i) => i.domain === "logic")
+        .slice(0, 6)
+        .map((i) => response(i.id, true)),
+      bank,
+    );
+    expect(e.lower).toBeLessThan(e.theta);
+    expect(e.upper).toBeGreaterThan(e.theta);
+    expect(Math.abs(e.upper - e.theta - (e.theta - e.lower))).toBeGreaterThan(
+      0.001,
+    );
+  });
+  it("starts at medium difficulty and covers all available families before repeating", () => {
+    const s = fresh();
+    s.testVersion = "1.1";
+    const families = new Map<string, Set<string>>();
+    for (let n = 0; n < 36; n++) {
+      const item = selectItem(s, bank)!;
+      if (n < 6) expect(item.difficulty).toBe(0);
+      const seen = families.get(item.domain) ?? new Set<string>();
+      const available = new Set(
+        bank.filter((i) => i.domain === item.domain).map((i) => i.subtype),
+      );
+      if (seen.size < available.size)
+        expect(seen.has(item.subtype)).toBe(false);
+      seen.add(item.subtype);
+      families.set(item.domain, seen);
+      s.answers.push(response(item.id, true));
+    }
+    expect(report(s, bank).limited).toBe(true);
+  });
+  it("retains legacy symmetric domain intervals", () => {
+    const s = fresh();
+    s.answers = bank.slice(0, 6).map((i) => response(i.id, true));
+    const p = report(s, bank).profiles[0];
+    expect(p.interval).toEqual([
+      Math.round(100 + 15 * (p.theta - 1.96 * p.se)),
+      Math.round(100 + 15 * (p.theta + 1.96 * p.se)),
+    ]);
+  });
+});

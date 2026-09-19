@@ -31,3 +31,9 @@ URL vérifiée : https://kevinlabens-del.github.io/SYNAPTIK-/
 Inspection du site publié : capture de l'accueil desktop, ouverture de la préparation, contenu et bouton d'installation visibles. Aucune erreur JavaScript de l'application observée ; des erreurs du script d'extension du navigateur de contrôle ont été distinguées de celles de l'application. Les captures mobiles sont produites par la CI ; aucun essai sur téléphone Android physique ni résultat Lighthouse n'est revendiqué.
 
 Audit final de répétition : 12 tests unitaires passent après ajout d'une vérification des 312 exercices distincts et des 120 sélections Deep sans répétition exacte. Les temps par domaine incluent un coefficient de variation descriptif.
+
+
+## Version 1.1 regression checks
+Added tests for interrupted-answer exclusion, asymmetric posterior quantiles, medium-difficulty starts, subtype coverage and legacy interval compatibility. Browser flow includes the new speed readiness screen. Existing synthetic results describe the earlier selector; they must not be used to validate version 1.1 or human measurement accuracy.
+
+The new selector is simulated separately in `SIMULATION-1.1.json` (2,800 synthetic Quick sessions). This is model recovery under assumed parameters, not an empirical accuracy comparison. Browser regression waits longer than the deadline on the readiness screen and checks that confirmation delay is excluded from stored speed duration.

@@ -1,0 +1,55 @@
+{
+  "warning": "Synthetic model recovery only, NOT human validation. Strong prior shrinkage expected at extremes with Quick.",
+  "sessions": 2800,
+  "rows": [
+    {
+      "ability": -3,
+      "n": 400,
+      "mean": -2.065000000000002,
+      "rmse": 1.0157755657624374,
+      "coverage": 1
+    },
+    {
+      "ability": -2,
+      "n": 400,
+      "mean": -1.507166666666667,
+      "rmse": 0.640841460720027,
+      "coverage": 1
+    },
+    {
+      "ability": -1,
+      "n": 400,
+      "mean": -0.7193333333333334,
+      "rmse": 0.4868492808069276,
+      "coverage": 1
+    },
+    {
+      "ability": 0,
+      "n": 400,
+      "mean": -0.03249999999999999,
+      "rmse": 0.3815902398006415,
+      "coverage": 1
+    },
+    {
+      "ability": 1,
+      "n": 400,
+      "mean": 0.6913333333333334,
+      "rmse": 0.48762462794426004,
+      "coverage": 1
+    },
+    {
+      "ability": 2,
+      "n": 400,
+      "mean": 1.4369999999999996,
+      "rmse": 0.6834390162178984,
+      "coverage": 1
+    },
+    {
+      "ability": 3,
+      "n": 400,
+      "mean": 2.110166666666666,
+      "rmse": 0.946402545314507,
+      "coverage": 1
+    }
+  ]
+}

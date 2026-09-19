@@ -126,7 +126,7 @@ export default function App() {
       answers: [],
       interruptions: 0,
       status: "active",
-      testVersion: "1.0",
+      testVersion: "1.1",
       calibrationStatus: "experimental",
     };
     s.currentId = selectItem(s, bank)?.id;
@@ -136,6 +136,7 @@ export default function App() {
   }
   async function answer(a: Omit<Answer, "theta">) {
     if (!session) return;
+    if (session.testVersion !== "1.1") a = { ...a, excluded: undefined };
     setResumed(false);
     const item = bank.find((i) => i.id === a.itemId)!;
     const theta = estimate(
@@ -315,7 +316,8 @@ export default function App() {
                   <h2>{m}</h2>
                   <p>{["10–15", "25–35", "45–60"][i]} min</p>
                   <small>
-                    {counts[m]} {fr ? "exercices" : "items"}
+                    {counts[m]}{" "}
+                    {fr ? "réponses exploitables" : "usable responses"}
                   </small>
                 </button>
               ))}
@@ -492,7 +494,16 @@ export default function App() {
             <div className="result-grid">
               <div className="score-panel">
                 <p>SYNAPTIK Cognitive Estimate</p>
-                <strong className="big-score">{r.score}</strong>
+                {r.limited && (
+                  <p className="warning">
+                    {fr
+                      ? "Profil exploratoire : données insuffisantes pour une estimation précise. Le nombre ci-dessous est une sortie du modèle, pas un QI mesuré."
+                      : "Exploratory profile: insufficient data for a precise estimate. The number below is a model output, not a measured IQ."}
+                  </p>
+                )}
+                <strong className="big-score">
+                  {r.validCount ? r.score : "—"}
+                </strong>
                 <p>
                   {fr
                     ? "Équivalent QI expérimental"
@@ -503,21 +514,37 @@ export default function App() {
                 </h2>
                 <p className="small">
                   {fr
-                    ? "Intervalle conditionnel au modèle à 95 %"
-                    : "95% model-conditional interval"}
+                    ? "Plage indicative conditionnelle au modèle"
+                    : "Indicative model-conditional range"}
                 </p>
                 <div className="metrics">
                   <span>
-                    <b>{r.percentile}</b>
+                    <b>
+                      {r.percentile === 0
+                        ? "<1"
+                        : r.percentile === 100
+                          ? ">99"
+                          : r.percentile}
+                    </b>
                     {fr ? "percentile théorique" : "theoretical percentile"}
                   </span>
                   <span>
-                    <b>{r.reliability.value}/100</b>
-                    {fr ? "indice de session" : "session index"}
+                    <b>
+                      {r.reliability.label === "stable"
+                        ? fr
+                          ? "Stables"
+                          : "Stable"
+                        : fr
+                          ? "Perturbées"
+                          : "Disrupted"}
+                    </b>
+                    {fr ? "conditions de passation" : "session conditions"}
                   </span>
                   <span>
-                    <b>{session.answers.length}</b>
-                    {fr ? "exercices" : "items"}
+                    <b>
+                      {r.validCount}/{session.answers.length}
+                    </b>
+                    {fr ? "réponses exploitables" : "usable responses"}
                   </span>
                 </div>
               </div>
@@ -539,8 +566,15 @@ export default function App() {
               {r.profiles.map((p) => (
                 <article key={p.domain}>
                   <span className="eyebrow">{names[lang][p.domain]}</span>
+                  {p.limited && (
+                    <p className="small">
+                      {fr
+                        ? "Incertitude élevée · davantage d’exercices nécessaires"
+                        : "High uncertainty · more exercises needed"}
+                    </p>
+                  )}
                   <h2>
-                    {p.score}
+                    {p.n ? p.score : "—"}
                     <small> [{p.interval.join("–")}]</small>
                   </h2>
                   <div className="meter">
@@ -548,7 +582,12 @@ export default function App() {
                   </div>
                   <p>
                     {p.correct}/{p.n} · {Math.round(p.meanTime / 1000)} s /{" "}
-                    {fr ? "réponse" : "answer"} · P{p.percentile}
+                    {fr ? "réponse" : "answer"} · P
+                    {p.percentile === 0
+                      ? "<1"
+                      : p.percentile === 100
+                        ? ">99"
+                        : p.percentile}
                   </p>
                   <p className="small">
                     {fr
@@ -669,48 +708,52 @@ export default function App() {
                 </button>
               </div>
             )}
-            {[...sessions].reverse().map((s) => {
-              const rr = report(s, makeBank(s.lang));
-              return (
-                <article className="history-row" key={s.id}>
-                  <button onClick={() => open(s)}>
-                    <span>
-                      {new Date(s.created).toLocaleString(lang)} · {s.mode}
-                    </span>
-                    <strong>{s.status === "complete" ? rr.score : "↻"}</strong>
-                    <small>
-                      {s.status === "complete"
-                        ? `${rr.interval.join("–")} · P${rr.percentile} · ${rr.reliability.value}/100`
-                        : `${s.answers.length}/${counts[s.mode]}`}
-                    </small>
-                    <small>
-                      {rr.profiles
-                        .map((p) => `${names[lang][p.domain]} ${p.score}`)
-                        .join(" · ")}
-                    </small>
-                  </button>
-                  <button
-                    aria-label={
-                      fr ? "Supprimer cette session" : "Delete session"
-                    }
-                    onClick={async () => {
-                      if (
-                        confirm(
-                          fr
-                            ? "Supprimer cette session ?"
-                            : "Delete this session?",
-                        )
-                      ) {
-                        await db.remove(s.id);
-                        setSessions(await db.list());
+            {[...sessions]
+              .sort((a, b) => b.created.localeCompare(a.created))
+              .map((s) => {
+                const rr = report(s, makeBank(s.lang));
+                return (
+                  <article className="history-row" key={s.id}>
+                    <button onClick={() => open(s)}>
+                      <span>
+                        {new Date(s.created).toLocaleString(lang)} · {s.mode}
+                      </span>
+                      <strong>
+                        {s.status === "complete" ? rr.score : "↻"}
+                      </strong>
+                      <small>
+                        {s.status === "complete"
+                          ? `${rr.interval.join("–")} · P${rr.percentile} · ${rr.reliability.value}/100`
+                          : `${s.answers.length}/${counts[s.mode]}`}
+                      </small>
+                      <small>
+                        {rr.profiles
+                          .map((p) => `${names[lang][p.domain]} ${p.score}`)
+                          .join(" · ")}
+                      </small>
+                    </button>
+                    <button
+                      aria-label={
+                        fr ? "Supprimer cette session" : "Delete session"
                       }
-                    }}
-                  >
-                    ×
-                  </button>
-                </article>
-              );
-            })}
+                      onClick={async () => {
+                        if (
+                          confirm(
+                            fr
+                              ? "Supprimer cette session ?"
+                              : "Delete this session?",
+                          )
+                        ) {
+                          await db.remove(s.id);
+                          setSessions(await db.list());
+                        }
+                      }}
+                    >
+                      ×
+                    </button>
+                  </article>
+                );
+              })}
             <div className="actions">
               <button
                 onClick={() => download(sessions, "synaptik-history.json")}

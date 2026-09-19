@@ -31,3 +31,14 @@ Difficultés nominales non validées ; gabarits liés ; QCM et hasard ; effet d'
 Référence de méthode (pas validation du produit) : Sharpnack et al., _BanditCAT and AutoIRT_, 2024, https://arxiv.org/abs/2410.21033 — calibration des paramètres, mise à jour bayésienne et sélection informative.
 
 Les paramètres du prior, de la grille et les poids par domaine sont regroupés dans `src/cognitive/config.ts`. Les inversions « item facile faux / item plus difficile correct » et le coefficient de variation temporelle sont descriptifs ; ils n'entraînent pas de pénalité automatique. Ils ne prouvent ni triche ni inattention.
+
+
+## Version 1.1 — measurement changes
+
+New sessions store `testVersion: "1.1"`; existing sessions retain the legacy selector and interval calculation. Interrupted/resumed answers in new sessions store `excluded: true`: retained in the record, but excluded from the likelihood, accuracy and timing summaries. No replacement item is silently added; the report displays usable/answered counts. Exclusion is not evidence of cheating.
+
+Domain limits now use discrete posterior 2.5%/97.5% quantiles, rather than a symmetric Gaussian approximation. The existing heuristic disruption inflation remains; inflated limits are sensitivity bounds, not empirically validated coverage. The global interval still uses the conservative average of domain posterior standard deviations, not an independence assumption. Neither interval includes unknown calibration error. No prior, normative scale, or score weights were adjusted to increase results or artificially narrow uncertainty.
+
+A domain is flagged as limited if it has fewer than 12 usable answers OR posterior SD exceeds 0.65 theta units. These are explicit product warning thresholds, not validated psychometric acceptance criteria. Passing them never means clinical validity. Quick is always exploratory. Normal-theory percentile endpoints display <1 and >99 rather than a false absolute rank.
+
+Speed tasks have an instruction/ready screen without stimuli. Their measured response duration ends at the final permitted selection (or the deadline if unanswered), not at confirmation. `selectionTime` and `timedOut` are recorded separately. Reading time and confirmation delay no longer contaminate speed durations. The accuracy-based 3PL model remains unchanged; speed latency is descriptive, not calibrated processing speed.

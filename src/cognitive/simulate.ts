@@ -21,7 +21,7 @@ for (let ability = -3; ability <= 3; ability++) {
       answers: [],
       interruptions: 0,
       status: "active",
-      testVersion: "1",
+      testVersion: "1.1",
       calibrationStatus: "experimental",
     };
     for (let n = 0; n < counts.quick; n++) {

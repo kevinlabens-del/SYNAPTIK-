@@ -32,7 +32,7 @@ export function probability(
 export function estimate(answers: Answer[], bank: Item[]) {
   const rows = answers
     .map((a) => ({ a, i: bank.find((i) => i.id === a.itemId) }))
-    .filter((r) => r.i);
+    .filter((r) => r.i && !r.a.excluded);
   const grid = Array.from(
     {
       length:
@@ -57,7 +57,21 @@ export function estimate(answers: Answer[], bank: Item[]) {
   const theta = grid.reduce((s, t, k) => s + t * w[k], 0) / total;
   const variance =
     grid.reduce((s, t, k) => s + (t - theta) ** 2 * w[k], 0) / total;
-  return { theta, se: Math.sqrt(variance), n: rows.length };
+  const quantile = (q: number) => {
+    let cumulative = 0;
+    for (let k = 0; k < grid.length; k++) {
+      cumulative += w[k] / total;
+      if (cumulative >= q) return grid[k];
+    }
+    return grid[grid.length - 1];
+  };
+  return {
+    theta,
+    se: Math.sqrt(variance),
+    n: rows.length,
+    lower: quantile(0.025),
+    upper: quantile(0.975),
+  };
 }
 export function cdf(z: number) {
   const t = 1 / (1 + 0.2316419 * Math.abs(z));
@@ -109,12 +123,27 @@ export function selectItem(s: Session, bank: Item[], previous: string[] = []) {
       !used.has(i.id) &&
       !usedContent.has(itemFingerprint(i)),
   );
+  const modern = s.testVersion === "1.1";
+  const history = domainAnswers(s, bank, d);
+  const families = new Map<string, number>();
+  for (const a of history) {
+    const family = bank.find((i) => i.id === a.itemId)?.subtype;
+    if (family) families.set(family, (families.get(family) ?? 0) + 1);
+  }
+  const least = Math.min(
+    ...candidates.map((i) => families.get(i.subtype) ?? 0),
+  );
+  const eligible = modern
+    ? candidates.filter((i) => (families.get(i.subtype) ?? 0) === least)
+    : candidates;
   const rng = random(s.seed + s.answers.length * 7919);
-  return candidates
+  return eligible
     .map((i) => ({
       i,
       v:
-        information(e.theta, i) +
+        (modern && history.length === 0
+          ? -Math.abs(i.difficulty)
+          : information(e.theta, i)) +
         rng() * 0.12 -
         (previous.includes(i.id) ? 0.4 : 0),
     }))
@@ -167,16 +196,27 @@ export function reliability(s: Session, b: Item[]) {
 export function report(s: Session, b: Item[]) {
   const rel = reliability(s, b);
   const profiles = domains.map((domain) => {
-    const a = domainAnswers(s, b, domain);
+    const a = domainAnswers(s, b, domain).filter((a) => !a.excluded);
     const e = estimate(a, b);
     const inflation = 1 + (100 - rel.value) / 100;
     const interval = [
-      100 + 15 * (e.theta - 1.96 * e.se * inflation),
-      100 + 15 * (e.theta + 1.96 * e.se * inflation),
+      100 +
+        15 *
+          (e.theta +
+            ((s.testVersion === "1.1" ? e.lower : e.theta - 1.96 * e.se) -
+              e.theta) *
+              inflation),
+      100 +
+        15 *
+          (e.theta +
+            ((s.testVersion === "1.1" ? e.upper : e.theta + 1.96 * e.se) -
+              e.theta) *
+              inflation),
     ].map(Math.round);
     return {
       domain,
       ...e,
+      limited: e.n < 12 || e.se > 0.65,
       score: Math.round(100 + 15 * e.theta),
       percentile: Math.round(cdf(e.theta) * 100),
       interval,
@@ -219,6 +259,8 @@ export function report(s: Session, b: Item[]) {
       totalWeight) *
     (1 + (100 - rel.value) / 100);
   return {
+    limited: profiles.some((p) => p.limited),
+    validCount: profiles.reduce((n, p) => n + p.n, 0),
     score: Math.round(100 + 15 * theta),
     percentile: Math.round(cdf(theta) * 100),
     interval: [

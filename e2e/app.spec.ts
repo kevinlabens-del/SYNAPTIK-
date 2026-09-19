@@ -51,12 +51,19 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   }
   for (let n = 0; n < 36; n++) {
     await expect(page.locator(".test-top")).toContainText(`${n + 1} / 36`);
+    if (n % 6 === 5) {
+      await expect(page.locator(".option")).toHaveCount(0);
+      if (n === 5) await page.waitForTimeout(8500);
+      await page.getByRole("button", { name: "Je suis prêt" }).click();
+      await expect(page.locator(".option").first()).toBeEnabled();
+    }
     await page.locator(".option").first().waitFor();
     const first = page.locator(".option").first();
     if (await first.isEnabled()) {
       await first.click();
       await expect(first).toHaveAttribute("aria-pressed", "true");
     }
+    if (n === 5) await page.waitForTimeout(1500);
     await page.getByRole("button", { name: /Valider ma réponse/ }).click();
     if (n === 2) {
       await expect(page.locator(".test-top")).toContainText("4 / 36");
@@ -69,6 +76,36 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   }
   await expect(page.getByText("Votre empreinte cognitive")).toBeVisible();
   await expect(page.locator(".profile-list article")).toHaveCount(6);
+  const stored = await page.evaluate(
+    () =>
+      new Promise<{
+        testVersion: string;
+        answers: {
+          excluded?: boolean;
+          duration: number;
+          selectionTime?: number;
+        }[];
+      }>((resolve, reject) => {
+        const request = indexedDB.open("synaptik", 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const db = request.result;
+          const read = db
+            .transaction("sessions")
+            .objectStore("sessions")
+            .getAll();
+          read.onsuccess = () => {
+            resolve(read.result[0]);
+            db.close();
+          };
+          read.onerror = () => reject(read.error);
+        };
+      }),
+  );
+  expect(stored.testVersion).toBe("1.1");
+  expect(stored.answers[3].excluded).toBe(true);
+  expect(stored.answers[5].duration).toBe(stored.answers[5].selectionTime);
+  expect(stored.answers[5].duration).toBeLessThan(8000);
   const score = await page.locator(".big-score").textContent();
   await page.getByLabel("Language").selectOption("en");
   await expect(page.locator(".big-score")).toHaveText(score!);

@@ -21,7 +21,7 @@ self.onmessage = (event: MessageEvent<{ theta: number; n: number }>) => {
       answers: [],
       interruptions: 0,
       status: "complete",
-      testVersion: "1",
+      testVersion: "1.1",
       calibrationStatus: "experimental",
     };
     for (let j = 0; j < 36; j++) {

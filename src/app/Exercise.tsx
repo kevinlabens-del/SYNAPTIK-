@@ -36,6 +36,8 @@ export function Exercise({
   practice?: boolean;
   resumed?: boolean;
 }) {
+  const [ready, setReady] = useState(item.domain !== "speed");
+  const selectedAt = useRef<number | null>(null);
   const [phase, setPhase] = useState(0);
   const [choice, setChoice] = useState<number | null>(null);
   const [exposed, setExposed] = useState(!!item.exposureMs && !resumed);
@@ -48,6 +50,8 @@ export function Exercise({
   const submitted = useRef(false);
   const fr = lang === "fr";
   useEffect(() => {
+    if (!ready) return;
+    start.current = performance.now();
     const hidden = () => {
       if (document.hidden) {
         interrupted.current = true;
@@ -74,7 +78,7 @@ export function Exercise({
       clearTimeout(deadline);
       clearInterval(sequenceTimer);
     };
-  }, [item]);
+  }, [item, ready]);
   function choose(i: number) {
     if (
       item.domain === "speed" &&
@@ -83,7 +87,8 @@ export function Exercise({
       setExpired(true);
       return;
     }
-    if (expired || exposed || feedback) return;
+    if (!ready || expired || exposed || feedback) return;
+    selectedAt.current = performance.now() - start.current;
     if (first.current === null)
       first.current = performance.now() - start.current;
     if (choice !== null && choice !== i) changes.current++;
@@ -96,12 +101,35 @@ export function Exercise({
       itemId: item.id,
       choice: choice ?? -1,
       correct: choice === item.correctAnswer,
-      duration: performance.now() - start.current,
+      duration:
+        item.domain === "speed"
+          ? (selectedAt.current ?? item.estimatedTime * 1000)
+          : performance.now() - start.current,
+      selectionTime: selectedAt.current ?? undefined,
+      timedOut: expired,
+      excluded: interrupted.current,
       firstInteraction: first.current,
       changes: changes.current,
       interrupted: interrupted.current,
     });
   }
+  if (!ready)
+    return (
+      <section className="exercise">
+        <p className="eyebrow">
+          {fr ? "Vitesse · préparation" : "Speed · preparation"}
+        </p>
+        <h2>{item.prompt}</h2>
+        <p>
+          {fr
+            ? `Tu disposeras de ${item.estimatedTime} secondes pour choisir. Le chronomètre commence après ce bouton ; la confirmation n'entre pas dans le temps de réponse.`
+            : `You will have ${item.estimatedTime} seconds to choose. Timing starts after this button; confirmation is not included in response time.`}
+        </p>
+        <button className="primary" onClick={() => setReady(true)}>
+          {fr ? "Je suis prêt" : "I am ready"}
+        </button>
+      </section>
+    );
   return (
     <section
       className="exercise"
