@@ -49,8 +49,8 @@ export function advancedItem(
     };
   }
   if (domain === "logic" && k >= 48) {
-    const start = 1 + Math.floor((k-48)/4);
-    const symbol=["●","◆","■","▲"][k%4];
+    const start = 1 + Math.floor((k - 48) / 4);
+    const symbol = ["●", "◆", "■", "▲"][k % 4];
     const matrix = Array.from({ length: 3 }, (_, r) =>
       Array.from({ length: 3 }, (_, c) =>
         r === 2 && c === 2 ? "?" : symbol.repeat(start + r + c),

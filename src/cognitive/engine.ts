@@ -1,3 +1,4 @@
+import { scoringConfig } from "./config";
 import {
   domains,
   counts,
@@ -32,10 +33,19 @@ export function estimate(answers: Answer[], bank: Item[]) {
   const rows = answers
     .map((a) => ({ a, i: bank.find((i) => i.id === a.itemId) }))
     .filter((r) => r.i);
-  const grid = Array.from({ length: 241 }, (_, k) => -6 + k * 0.05);
+  const grid = Array.from(
+    {
+      length:
+        Math.round(
+          (scoringConfig.gridMax - scoringConfig.gridMin) /
+            scoringConfig.gridStep,
+        ) + 1,
+    },
+    (_, k) => scoringConfig.gridMin + k * scoringConfig.gridStep,
+  );
   const logs = grid.map(
     (t) =>
-      -0.5 * (t / 2) ** 2 +
+      -0.5 * (t / scoringConfig.priorSD) ** 2 +
       rows.reduce((sum, { a, i }) => {
         const p = probability(t, i!);
         return sum + Math.log(a.correct ? p : 1 - p);
@@ -100,6 +110,22 @@ export function reliability(s: Session, b: Item[]) {
       ),
   ).length;
   const interrupted = s.answers.filter((a) => a.interrupted).length;
+  let comparablePairs = 0,
+    irregularPairs = 0;
+  for (const d of domains) {
+    const rows = domainAnswers(s, b, d).map((a) => ({
+      a,
+      i: b.find((i) => i.id === a.itemId)!,
+    }));
+    for (const easy of rows)
+      for (const hard of rows) {
+        if (hard.i.difficulty - easy.i.difficulty >= 2) {
+          comparablePairs++;
+          if (!easy.a.correct && hard.a.correct) irregularPairs++;
+        }
+      }
+  }
+
   const value = Math.max(
     0,
     Math.round(
@@ -113,6 +139,8 @@ export function reliability(s: Session, b: Item[]) {
     value,
     rapid,
     interrupted,
+    comparablePairs,
+    irregularPairs,
     label: value >= 85 ? "stable" : value >= 65 ? "caution" : "limited",
   };
 }
@@ -134,6 +162,18 @@ export function report(s: Session, b: Item[]) {
       interval,
       correct: a.filter((x) => x.correct).length,
       meanTime: a.length ? a.reduce((v, x) => v + x.duration, 0) / a.length : 0,
+      timingCV:
+        a.length > 1
+          ? (() => {
+              const mean = a.reduce((v, x) => v + x.duration, 0) / a.length;
+              return mean
+                ? Math.sqrt(
+                    a.reduce((v, x) => v + (x.duration - mean) ** 2, 0) /
+                      a.length,
+                  ) / mean
+                : 0;
+            })()
+          : null,
       maxDifficulty: Math.max(
         -3,
         ...b
@@ -142,9 +182,21 @@ export function report(s: Session, b: Item[]) {
       ),
     };
   });
-  const theta = profiles.reduce((v, p) => v + p.theta, 0) / 6;
+  const totalWeight = domains.reduce(
+    (sum, d) => sum + scoringConfig.domainWeights[d],
+    0,
+  );
+  const theta =
+    profiles.reduce(
+      (v, p) => v + p.theta * scoringConfig.domainWeights[p.domain],
+      0,
+    ) / totalWeight;
   /* Conservative unknown cross-domain covariance: average SE, not independence. */ const se =
-    (profiles.reduce((v, p) => v + p.se, 0) / 6) *
+    (profiles.reduce(
+      (v, p) => v + p.se * scoringConfig.domainWeights[p.domain],
+      0,
+    ) /
+      totalWeight) *
     (1 + (100 - rel.value) / 100);
   return {
     score: Math.round(100 + 15 * theta),

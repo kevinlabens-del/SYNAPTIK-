@@ -1,8 +1,20 @@
+import { useRef } from "react";
 import { domains, type Lang } from "../cognitive/types";
 import { names } from "./i18n";
 export function Neural({ lang, scores }: { lang: Lang; scores?: number[] }) {
+  const svg = useRef<SVGSVGElement | null>(null);
   return (
     <svg
+      ref={svg}
+      onPointerMove={(e) => {
+        if (scores || matchMedia("(prefers-reduced-motion: reduce)").matches)
+          return;
+        const box = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.transform = `perspective(800px) rotateY(${((e.clientX - box.left) / box.width - 0.5) * 7}deg) rotateX(${((e.clientY - box.top) / box.height - 0.5) * -7}deg)`;
+      }}
+      onPointerLeave={(e) => {
+        e.currentTarget.style.transform = "none";
+      }}
       className="neural"
       viewBox="0 0 700 560"
       role="img"

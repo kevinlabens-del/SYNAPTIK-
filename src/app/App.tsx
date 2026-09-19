@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
+import { Install } from "./Install";
+const DevPanel = import.meta.env.DEV ? lazy(() => import("./DevPanel")) : null;
 import {
   counts,
   domains,
@@ -58,7 +60,11 @@ export default function App() {
   const t = labels[lang],
     fr = lang === "fr";
   const active = sessions.find((s) => s.status === "active");
-  const r = session ? report(session, bank) : null;
+  const sessionBank = useMemo(
+    () => makeBank(session?.lang ?? lang),
+    [session?.lang, lang],
+  );
+  const r = session ? report(session, sessionBank) : null;
   useEffect(() => {
     window.scrollTo(0, 0);
     document.documentElement.lang = lang;
@@ -424,7 +430,7 @@ export default function App() {
                     }
                     strokeWidth="4"
                     pathLength="360"
-                    strokeDasharray="48 312"
+                    strokeDasharray={`${(48 * domainAnswers(session, bank, d).length) / (counts[session.mode] / 6)} ${360 - (48 * domainAnswers(session, bank, d).length) / (counts[session.mode] / 6)}`}
                     transform={`rotate(${k * 60 - 90} 50 50)`}
                   />
                 ))}
@@ -591,6 +597,20 @@ export default function App() {
               {fr
                 ? "Cet indice est heuristique, pas un coefficient de fiabilité psychométrique."
                 : "This index is heuristic, not a psychometric reliability coefficient."}
+            </p>
+            <p className="small">
+              {fr
+                ? "Inversions difficulté/réussite observées"
+                : "Observed difficulty/success reversals"}{" "}
+              : {r.reliability.irregularPairs}/{r.reliability.comparablePairs}.{" "}
+              {fr
+                ? "Indicateur descriptif : une inversion isolée est normale et ne prouve rien sur la validité de la session."
+                : "Descriptive indicator: an isolated reversal is normal and does not invalidate a session."}
+            </p>
+            <p className="small">
+              {fr
+                ? "Méthode : estimation bayésienne par domaine, transformation 100 + 15 × theta, moyenne pondérée des six domaines. Paramètres provisoires, sans étalonnage humain."
+                : "Method: Bayesian estimation by domain, 100 + 15 × theta transformation, weighted mean of six domains. Provisional parameters without human calibration."}
             </p>
             <div className="actions">
               <button className="primary" onClick={() => window.print()}>
@@ -781,6 +801,11 @@ export default function App() {
             {import.meta.env.DEV && (
               <>
                 <h2>Developer / calibration</h2>
+                {DevPanel && (
+                  <Suspense fallback={<p>Chargement…</p>}>
+                    <DevPanel />
+                  </Suspense>
+                )}
                 <pre>
                   {JSON.stringify(
                     {
@@ -802,6 +827,7 @@ export default function App() {
         )}
       </main>
       <footer>
+        <Install lang={lang} />
         <span>
           SYNAPTIK <b> / </b> COGNITIVE INTELLIGENCE TEST
         </span>

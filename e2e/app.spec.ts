@@ -69,6 +69,23 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   }
   await expect(page.getByText("Votre empreinte cognitive")).toBeVisible();
   await expect(page.locator(".profile-list article")).toHaveCount(6);
+  const score = await page.locator(".big-score").textContent();
+  await page.getByLabel("Language").selectOption("en");
+  await expect(page.locator(".big-score")).toHaveText(score!);
+  await page.getByLabel("Language").selectOption("fr");
+  for (const [width, height] of sizes) {
+    await page.setViewportSize({ width, height });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `test-results/result-${width}.png`,
+      fullPage: true,
+    });
+  }
+
   await page.screenshot({ path: "test-results/results.png", fullPage: true });
   await page
     .getByRole("button", { name: "Mes résultats", exact: true })

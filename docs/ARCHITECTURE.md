@@ -16,3 +16,5 @@ Le score dépend exclusivement des réponses d'évaluation. L'entraînement ne c
 Une reprise signale l'item comme interrompu ; une séquence de mémoire déjà présentée n'est pas réaffichée. La mesure de durée utilise performance.now() pour la tentative affichée, pas le temps passé application fermée. Les changements d'onglet sont enregistrés. Le score n'utilise pas le temps total hors domaine vitesse.
 
 Les vues sont des états React, sans routeur externe. La navigation n'est pas un système d'URL partageable par résultat. La session reste accessible via l'historique après rechargement.
+
+Le panneau de développement inclut un simulateur de 1 à 5 000 sessions exécuté dans un Web Worker, avec capacité réglable de -3 à +3, moyenne retrouvée, RMSE et histogramme. Le composant et le worker sont éliminés du build de production.
