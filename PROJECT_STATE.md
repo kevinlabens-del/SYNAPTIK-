@@ -71,7 +71,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Ajout de `public/icon.svg`, déclaration comme favicon et icône PWA complémentaire, et ajout au précache du service worker. Les PNG 192, 512 et maskable sont conservés pour la compatibilité d’installation.
+Correction de la localisation française : les textes d’interface auparavant codés en anglais sont désormais traduits lorsque FR est sélectionné, tout en conservant le mode EN. Sont concernés notamment le grand titre, le CTA, la marque, la cartographie neuronale, les actions des domaines, les noms de modes et d’appareils, les résultats, l’historique, l’entraînement, la méthodologie, le réseau cognitif et les sous-types visibles.
 
 ## Prochaine priorité scientifique
 
