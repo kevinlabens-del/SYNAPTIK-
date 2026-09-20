@@ -2,7 +2,7 @@
 
 ## Identité
 
-**Nom :** SYNAPTIK — Cognitive Intelligence Test  
+**Nom :** SYNAPTIK TEST QI  
 **Type :** PWA d’évaluation cognitive expérimentale  
 **Stack :** React 19 + TypeScript + Vite  
 **Langues :** français et anglais  
@@ -84,7 +84,7 @@ Points stables :
 
 ## Navigation permanente
 
-SYNAPTIK utilise une navigation multipage côté application avec des routes hash compatibles GitHub Pages. Les sections principales sont accessibles via un menu burger et possèdent des URL distinctes. Les onglets horizontaux ne doivent pas être réintroduits sans demande explicite.
+SYNAPTIK TEST QI utilise une navigation multipage côté application avec des routes hash compatibles GitHub Pages. Les sections principales sont accessibles via un menu burger et possèdent des URL distinctes. Les onglets horizontaux ne doivent pas être réintroduits sans demande explicite.
 
 Routes stables : exploration, préparation, démonstration, analyse, résultat, résultats, entraînement et méthodologie. Le rechargement d’une route d’analyse doit tenter de restaurer la session active depuis IndexedDB.
 

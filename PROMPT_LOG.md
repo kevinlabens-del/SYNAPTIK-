@@ -1,5 +1,20 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Renommage en SYNAPTIK TEST QI
+
+### Demande
+Remplacer le nom public SYNAPTIK par SYNAPTIK TEST QI.
+
+### Action
+- nom visible de l’application remplacé ;
+- titre navigateur mis à jour ;
+- manifeste PWA `name` et `short_name` mis à jour ;
+- métadonnées HTML harmonisées ;
+- documentation d’identité mise à jour ;
+- dépôt GitHub conservé sous son nom actuel pour ne pas casser les liens.
+
+---
+
 ## 2026-09-20 — Navigation multipage et menu burger
 
 ### Demande

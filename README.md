@@ -1,4 +1,4 @@
-# SYNAPTIK — Cognitive Intelligence Test
+# SYNAPTIK TEST QI
 
 Explore the architecture of your mind.
 

@@ -112,7 +112,7 @@ export default function App() {
       practice: fr ? "Entraînement" : "Practice",
       method: fr ? "Méthodologie" : "Methodology",
     };
-    document.title = `SYNAPTIK — ${titles[page]}`;
+    document.title = `SYNAPTIK TEST QI — ${titles[page]}`;
   }, [page, lang, fr]);
   useEffect(() => {
     if (!menuOpen) return;
@@ -260,7 +260,7 @@ export default function App() {
           href="#/exploration"
           onClick={() => setPage("home")}
         >
-          <span className="brand-mark">S</span>SYNAPTIK
+          <span className="brand-mark">S</span>SYNAPTIK TEST QI
           <span className="brand-sub">
             {fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}
           </span>
@@ -312,7 +312,7 @@ export default function App() {
         >
           <div className="menu-head">
             <div>
-              <span className="eyebrow">SYNAPTIK</span>
+              <span className="eyebrow">SYNAPTIK TEST QI</span>
               <strong>{fr ? "Navigation" : "Navigation"}</strong>
             </div>
             <button
@@ -449,8 +449,8 @@ export default function App() {
             </div>
             <p className="note">
               {fr
-                ? "SYNAPTIK cartographie une performance sur des exercices originaux. Cette édition ne dispose pas encore de normes humaines permettant de mesurer un QI validé."
-                : "SYNAPTIK maps performance on original tasks. This edition has no human norms for a validated IQ measurement."}
+                ? "SYNAPTIK TEST QI cartographie une performance sur des exercices originaux. Cette édition ne dispose pas encore de normes humaines permettant de mesurer un QI validé."
+                : "SYNAPTIK TEST QI maps performance on original tasks. This edition has no human norms for a validated IQ measurement."}
             </p>
           </>
         )}
@@ -667,7 +667,7 @@ export default function App() {
             <h1>{t.result}</h1>
             <div className="result-grid">
               <div className="score-panel">
-                <p>{fr ? "Estimation cognitive SYNAPTIK" : "SYNAPTIK Cognitive Estimate"}</p>
+                <p>{fr ? "Estimation cognitive SYNAPTIK TEST QI" : "SYNAPTIK TEST QI Cognitive Estimate"}</p>
                 {r.limited && (
                   <p className="warning">
                     {fr
@@ -998,7 +998,7 @@ export default function App() {
               {fr ? "Une carte. Pas une étiquette." : "A map. Not a label."}
             </h1>
             <h2>
-              {fr ? "Comment fonctionne SYNAPTIK ?" : "How does SYNAPTIK work?"}
+              {fr ? "Comment fonctionne SYNAPTIK TEST QI ?" : "How does SYNAPTIK TEST QI work?"}
             </h2>
             <p>
               {fr
@@ -1054,7 +1054,7 @@ export default function App() {
       <footer>
         <Install lang={lang} />
         <span>
-          SYNAPTIK <b> / </b>{" "}{fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}
+          SYNAPTIK TEST QI <b> / </b>{" "}{fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}
         </span>
         <span>
           {online

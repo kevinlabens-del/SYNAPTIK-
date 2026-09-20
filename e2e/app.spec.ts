@@ -22,6 +22,9 @@ for (const [width, height] of sizes)
       "home",
     );
     await expect(
+      page.getByRole("link", { name: /SYNAPTIK TEST QI/ }),
+    ).toBeVisible();
+    await expect(
       page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
     expect(

@@ -1,4 +1,4 @@
-# SYNAPTIK — État actuel du projet
+# SYNAPTIK TEST QI — État actuel du projet
 
 **Dernière mise à jour protocole :** 2026-09-20  
 **Branche principale :** main  
@@ -74,7 +74,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Navigation restructurée en application multipage : suppression des onglets horizontaux au profit d’un menu burger latéral. Les sections principales et les étapes du parcours disposent désormais de routes hash distinctes compatibles GitHub Pages. Le bouton retour/avant fonctionne et une route d’analyse rechargée peut restaurer la session active depuis IndexedDB.
+Renommage public de l’application : le nom officiel affiché devient **SYNAPTIK TEST QI**. Le nom visible dans l’en-tête, le menu, le titre navigateur, les métadonnées HTML et le manifeste PWA a été harmonisé. Le dépôt GitHub reste `SYNAPTIK-` pour préserver les liens et le déploiement existants.
 
 ## Prochaine priorité scientifique
 
