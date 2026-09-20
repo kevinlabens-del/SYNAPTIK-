@@ -18,7 +18,7 @@ import {
 } from "../cognitive/engine";
 import { makeBank } from "../exercises/bank";
 import * as db from "../storage/store";
-import { labels, names } from "./i18n";
+import { labels, names, modeNames, deviceNames, domainActions } from "./i18n";
 import { Neural } from "./Neural";
 import { Exercise } from "./Exercise";
 type Page =
@@ -183,7 +183,7 @@ export default function App() {
           }}
         >
           <span className="brand-mark">S</span>SYNAPTIK
-          <span className="brand-sub">COGNITIVE INTELLIGENCE TEST</span>
+          <span className="brand-sub">{fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}</span>
         </a>
         <nav aria-label="Navigation">
           {(["home", "history", "practice", "method"] as const).map((p) => (
@@ -197,7 +197,7 @@ export default function App() {
           ))}
         </nav>
         <select
-          aria-label="Language"
+          aria-label={fr ? "Langue" : "Language"}
           value={lang}
           disabled={page === "test" || page === "demo"}
           onChange={(e) => setLang(e.target.value as Lang)}
@@ -210,7 +210,7 @@ export default function App() {
         <div role="alert" className="warning">
           {error}
           <button onClick={() => download(session, "synaptik-recovery.json")}>
-            Export
+            {fr ? "Exporter" : "Export"}
           </button>
         </div>
       )}
@@ -224,11 +224,23 @@ export default function App() {
                   {t.experimental}
                 </p>
                 <h1>
-                  Explore the
-                  <br />
-                  architecture
-                  <br />
-                  of your <em>mind.</em>
+                  {fr ? (
+                    <>
+                      Explore
+                      <br />
+                      l’architecture
+                      <br />
+                      de ton <em>esprit.</em>
+                    </>
+                  ) : (
+                    <>
+                      Explore the
+                      <br />
+                      architecture
+                      <br />
+                      of your <em>mind.</em>
+                    </>
+                  )}
                 </h1>
                 <p className="lead">
                   {fr
@@ -253,7 +265,7 @@ export default function App() {
               <div className="hero-network">
                 <Neural lang={lang} />
                 <div className="network-caption">
-                  <span>01 / NEURAL MAPPING</span>
+                  <span>{fr ? "01 / CARTOGRAPHIE NEURONALE" : "01 / NEURAL MAPPING"}</span>
                   <span>
                     {fr ? "6 DOMAINES CONNECTÉS" : "6 CONNECTED DOMAINS"}
                   </span>
@@ -271,18 +283,7 @@ export default function App() {
                 >
                   <span>0{i + 1}</span>
                   {names[lang][d]}
-                  <small>
-                    {
-                      [
-                        "DEDUCE",
-                        "ROTATE",
-                        "RESOLVE",
-                        "RECALL",
-                        "CONNECT",
-                        "PROCESS",
-                      ][i]
-                    }
-                  </small>
+                  <small>{domainActions[lang][i]}</small>
                 </button>
               ))}
             </div>
@@ -295,7 +296,7 @@ export default function App() {
         )}
         {page === "setup" && (
           <section className="reading">
-            <p className="eyebrow">01 / PREPARATION</p>
+            <p className="eyebrow">{fr ? "01 / PRÉPARATION" : "01 / PREPARATION"}</p>
             <h1>
               {fr ? "Prépare ton exploration." : "Prepare your exploration."}
             </h1>
@@ -313,7 +314,7 @@ export default function App() {
                   aria-pressed={mode === m}
                 >
                   <span>0{i + 1}</span>
-                  <h2>{m}</h2>
+                  <h2>{modeNames[lang][m]}</h2>
                   <p>{["10–15", "25–35", "45–60"][i]} min</p>
                   <small>
                     {counts[m]}{" "}
@@ -343,7 +344,7 @@ export default function App() {
                   onChange={(e) => setDevice(e.target.value)}
                 >
                   {["smartphone", "tablet", "computer"].map((v) => (
-                    <option key={v}>{v}</option>
+                    <option key={v} value={v}>{deviceNames[lang][v]}</option>
                   ))}
                 </select>
               </label>
@@ -390,7 +391,7 @@ export default function App() {
         {page === "demo" && (
           <section className="test-wrap">
             <p className="eyebrow">
-              DEMO {demo + 1}/3 · {fr ? "NON NOTÉE" : "NOT SCORED"}
+              {fr ? "DÉMO" : "DEMO"} {demo + 1}/3 · {fr ? "NON NOTÉE" : "NOT SCORED"}
             </p>
             <Exercise
               key={demo}
@@ -450,7 +451,7 @@ export default function App() {
                 </p>
                 <p>
                   {session.answers.length + 1} / {counts[session.mode]} ·{" "}
-                  {session.mode.toUpperCase()}
+                  {modeNames[lang][session.mode].toUpperCase()}
                 </p>
               </div>
               <button className="text-button" onClick={() => setPage("home")}>
@@ -487,13 +488,13 @@ export default function App() {
         {page === "result" && session && r && (
           <section className="results">
             <p className="eyebrow">
-              ANALYSIS COMPLETE ·{" "}
+              {fr ? "ANALYSE TERMINÉE" : "ANALYSIS COMPLETE"} ·{" "}
               {new Date(session.created).toLocaleDateString(lang)}
             </p>
             <h1>{t.result}</h1>
             <div className="result-grid">
               <div className="score-panel">
-                <p>SYNAPTIK Cognitive Estimate</p>
+                <p>{fr ? "Estimation cognitive SYNAPTIK" : "SYNAPTIK Cognitive Estimate"}</p>
                 {r.limited && (
                   <p className="warning">
                     {fr
@@ -689,7 +690,7 @@ export default function App() {
         )}
         {page === "history" && (
           <section className="reading">
-            <p className="eyebrow">MY COGNITIVE HISTORY</p>
+            <p className="eyebrow">{fr ? "MON HISTORIQUE COGNITIF" : "MY COGNITIVE HISTORY"}</p>
             <h1>{t.history}</h1>
             <p>
               {fr
@@ -716,7 +717,7 @@ export default function App() {
                   <article className="history-row" key={s.id}>
                     <button onClick={() => open(s)}>
                       <span>
-                        {new Date(s.created).toLocaleString(lang)} · {s.mode}
+                        {new Date(s.created).toLocaleString(lang)} · {modeNames[lang][s.mode]}
                       </span>
                       <strong>
                         {s.status === "complete" ? rr.score : "↻"}
@@ -783,7 +784,7 @@ export default function App() {
         {page === "practice" && (
           <section className="test-wrap">
             <p className="eyebrow">
-              PRACTICE LAB ·{" "}
+              {fr ? "LABORATOIRE D’ENTRAÎNEMENT" : "PRACTICE LAB"} ·{" "}
               {fr
                 ? "SANS INFLUENCE SUR LES SCORES"
                 : "DOES NOT AFFECT ASSESSMENT SCORES"}
@@ -818,7 +819,7 @@ export default function App() {
         )}
         {page === "method" && (
           <section className="reading">
-            <p className="eyebrow">SCIENCE / TRANSPARENCY</p>
+            <p className="eyebrow">{fr ? "SCIENCE / TRANSPARENCE" : "SCIENCE / TRANSPARENCY"}</p>
             <h1>
               {fr ? "Une carte. Pas une étiquette." : "A map. Not a label."}
             </h1>
@@ -850,7 +851,7 @@ export default function App() {
             </p>
             {import.meta.env.DEV && (
               <>
-                <h2>Developer / calibration</h2>
+                <h2>{fr ? "Développement / calibration" : "Developer / calibration"}</h2>
                 {DevPanel && (
                   <Suspense fallback={<p>Chargement…</p>}>
                     <DevPanel />
@@ -879,7 +880,7 @@ export default function App() {
       <footer>
         <Install lang={lang} />
         <span>
-          SYNAPTIK <b> / </b> COGNITIVE INTELLIGENCE TEST
+          SYNAPTIK <b> / </b>{" "}{fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}
         </span>
         <span>
           {online
