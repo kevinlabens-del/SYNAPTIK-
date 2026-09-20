@@ -15,6 +15,6 @@ Le score dépend exclusivement des réponses d'évaluation. L'entraînement ne c
 
 Une reprise signale l'item comme interrompu ; une séquence de mémoire déjà présentée n'est pas réaffichée. La mesure de durée utilise performance.now() pour la tentative affichée, pas le temps passé application fermée. Les changements d'onglet sont enregistrés. Le score n'utilise pas le temps total hors domaine vitesse.
 
-Les vues sont des états React, sans routeur externe. La navigation n'est pas un système d'URL partageable par résultat. La session reste accessible via l'historique après rechargement.
+Les vues restent des états React sans dépendance de routeur externe, mais la navigation est synchronisée avec des routes hash compatibles GitHub Pages : `#/exploration`, `#/preparation`, `#/demonstration`, `#/analyse`, `#/resultat`, `#/resultats`, `#/entrainement`, `#/methodologie`. Le bouton retour/avant du navigateur fonctionne via `hashchange`. Une route `#/analyse` restaurée après rechargement tente de reprendre la session active depuis IndexedDB ; une route `#/resultat` sans session en mémoire recharge la session terminée la plus récente. Le menu burger est la navigation principale des pages publiques.
 
 Le panneau de développement inclut un simulateur de 1 à 5 000 sessions exécuté dans un Web Worker, avec capacité réglable de -3 à +3, moyenne retrouvée, RMSE et histogramme. Le composant et le worker sont éliminés du build de production.
