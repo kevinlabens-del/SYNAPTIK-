@@ -1,5 +1,18 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Navigation multipage et menu burger
+
+### Demande
+Remplacer la barre d’onglets horizontale par un menu burger et transformer SYNAPTIK en application multipage.
+
+### Action
+Suppression des onglets, ajout d’un menu burger responsive, routes distinctes compatibles GitHub Pages, prise en charge du retour/avant navigateur et restauration de la session active lors d’un rechargement sur l’analyse.
+
+### Test anti-régression
+Playwright vérifie le menu, les URL distinctes, le retour navigateur, le responsive et le rechargement hors ligne d’une page routée.
+
+---
+
 ## 2026-09-20 — Chrono Vitesse 8 s après « Je suis prêt »
 
 ### Demande

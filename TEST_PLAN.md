@@ -94,6 +94,15 @@ npm run simulate
 - [ ] aucune recharge automatique pendant préparation, démonstration, test ou résultat ;
 - [ ] compatibilité du chemin `/SYNAPTIK-/`.
 
+## Navigation multipage
+
+- [ ] le menu burger remplace les onglets horizontaux ;
+- [ ] chaque section principale possède une route hash distincte ;
+- [ ] retour/avant navigateur change de page ;
+- [ ] un rechargement sur une route publique conserve la page ;
+- [ ] la route d’analyse tente de restaurer la session active ;
+- [ ] les routes restent compatibles GitHub Pages et hors ligne.
+
 ## UI
 
 - [ ] aucun overflow horizontal ;

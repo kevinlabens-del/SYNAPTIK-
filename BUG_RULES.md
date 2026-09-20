@@ -95,3 +95,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** le résultat global indique une faiblesse sans permettre d’identifier les questions ratées.
 
 **Règle permanente :** après une session terminée, rendre disponible une correction détaillée avec question, réponse utilisateur, bonne réponse et explication. Ne jamais afficher ces informations avant la fin de l’évaluation.
+
+## BUG-019 — Route GitHub Pages cassée ou navigation non persistante
+
+**Risque :** une navigation multipage utilisant des chemins serveur provoque des 404 sur GitHub Pages, ou un rechargement perd l’écran courant.
+
+**Règle permanente :** utiliser les routes hash de SYNAPTIK, maintenir la correspondance route et état React, tester retour/avant navigateur et rechargement hors ligne, et restaurer depuis IndexedDB les écrans nécessitant une session lorsque c’est possible.

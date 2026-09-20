@@ -10,6 +10,8 @@
 
 - PWA React/TypeScript/Vite.
 - Interface FR/EN.
+- Navigation multipage par routes hash compatibles GitHub Pages.
+- Menu burger latéral remplaçant les anciens onglets horizontaux.
 - Six domaines cognitifs.
 - Modes Quick 36, Standard 72 et Deep 120.
 - Sélection adaptative.
@@ -72,7 +74,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Chronométrage Vitesse affiné : les nouvelles sessions passent en version 1.3. La durée revient à 8 secondes, mais uniquement après une phase de lecture non chronométrée. La question/consigne est affichée seule ; l’utilisateur appuie sur « Je suis prêt », puis le stimulus et les réponses apparaissent et le chrono de 8 secondes démarre. Les sessions 1.2 conservent leur fenêtre historique de 12 secondes.
+Navigation restructurée en application multipage : suppression des onglets horizontaux au profit d’un menu burger latéral. Les sections principales et les étapes du parcours disposent désormais de routes hash distinctes compatibles GitHub Pages. Le bouton retour/avant fonctionne et une route d’analyse rechargée peut restaurer la session active depuis IndexedDB.
 
 ## Prochaine priorité scientifique
 

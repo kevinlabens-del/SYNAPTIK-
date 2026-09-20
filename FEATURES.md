@@ -5,6 +5,7 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Fonction | Statut | Source principale |
 |---|---:|---|
 | Interface FR/EN | ✅ | `src/app` |
+| Navigation multipage hash + menu burger | ✅ | `src/app/App.tsx` + styles |
 | Responsive mobile renforcé jusqu’à 320 px | ✅ | `src/styles/responsive.css` |
 | Six domaines cognitifs | ✅ | `src/cognitive/types.ts` |
 | Quick 36 items | ✅ | `src/cognitive/types.ts` |
