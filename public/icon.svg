@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">SYNAPTIK icon</title>
+  <desc id="desc">Futuristic neural icon for SYNAPTIK, with a central S connected to luminous cyan, blue and violet nodes.</desc>
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05070d"/>
+      <stop offset="55%" stop-color="#0a1220"/>
+      <stop offset="100%" stop-color="#11102a"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#00c8ff" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#54f4ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#54f4ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#54f4ff"/>
+      <stop offset="50%" stop-color="#00c8ff"/>
+      <stop offset="100%" stop-color="#7c4dff"/>
+    </linearGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6" result="nodeBlur"/>
+      <feMerge><feMergeNode in="nodeBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#bgGrad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="110" fill="none" stroke="#243040" stroke-width="4"/>
+  <circle cx="256" cy="256" r="176" fill="url(#glowGrad)"/>
+  <g fill="none" stroke="#1d3349" stroke-width="2" stroke-dasharray="5 11" opacity="0.9">
+    <circle cx="256" cy="256" r="150"/><circle cx="256" cy="256" r="108"/>
+  </g>
+  <g stroke="url(#lineGrad)" stroke-width="10" stroke-linecap="round" opacity="0.96" filter="url(#softGlow)">
+    <path d="M256 124 L256 178"/><path d="M256 334 L256 388"/>
+    <path d="M124 256 L178 256"/><path d="M334 256 L388 256"/>
+    <path d="M165 165 L204 204"/><path d="M308 308 L347 347"/>
+    <path d="M347 165 L308 204"/><path d="M204 308 L165 347"/>
+    <path d="M212 150 L232 193"/><path d="M300 319 L280 276"/>
+    <path d="M362 212 L319 232"/><path d="M150 300 L193 280"/>
+  </g>
+  <g filter="url(#nodeGlow)">
+    <g><circle cx="256" cy="108" r="20" fill="#142539" stroke="#54f4ff" stroke-width="4"/><circle cx="256" cy="108" r="8" fill="#54f4ff"/></g>
+    <g><circle cx="256" cy="404" r="20" fill="#142539" stroke="#7c4dff" stroke-width="4"/><circle cx="256" cy="404" r="8" fill="#7c4dff"/></g>
+    <g><circle cx="108" cy="256" r="20" fill="#142539" stroke="#54f4ff" stroke-width="4"/><circle cx="108" cy="256" r="8" fill="#54f4ff"/></g>
+    <g><circle cx="404" cy="256" r="20" fill="#142539" stroke="#00c8ff" stroke-width="4"/><circle cx="404" cy="256" r="8" fill="#00c8ff"/></g>
+    <g><circle cx="151" cy="151" r="16" fill="#142539" stroke="#00c8ff" stroke-width="4"/><circle cx="151" cy="151" r="6.5" fill="#00c8ff"/></g>
+    <g><circle cx="361" cy="151" r="16" fill="#142539" stroke="#7c4dff" stroke-width="4"/><circle cx="361" cy="151" r="6.5" fill="#7c4dff"/></g>
+    <g><circle cx="151" cy="361" r="16" fill="#142539" stroke="#54f4ff" stroke-width="4"/><circle cx="151" cy="361" r="6.5" fill="#54f4ff"/></g>
+    <g><circle cx="361" cy="361" r="16" fill="#142539" stroke="#00c8ff" stroke-width="4"/><circle cx="361" cy="361" r="6.5" fill="#00c8ff"/></g>
+  </g>
+  <g filter="url(#softGlow)">
+    <circle cx="256" cy="256" r="76" fill="#0b1624" stroke="#54f4ff" stroke-width="5"/>
+    <circle cx="256" cy="256" r="58" fill="#0f2230" stroke="#244657" stroke-width="3"/>
+  </g>
+  <path d="M286 201c-11-12-25-18-43-18-24 0-42 11-42 29 0 20 19 26 43 31 29 6 66 14 66 53 0 33-29 57-71 57-26 0-48-8-67-27l22-21c14 14 30 20 48 20 21 0 37-10 37-25 0-16-14-22-41-28-38-8-68-19-68-57 0-34 31-59 74-59 28 0 48 8 65 24z" fill="#edfaff"/>
+  <text x="256" y="455" text-anchor="middle" font-family="monospace" font-size="22" letter-spacing="5" fill="#8fa9bc">SYNAPTIK</text>
+</svg>

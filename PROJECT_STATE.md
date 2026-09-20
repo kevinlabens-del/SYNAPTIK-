@@ -24,6 +24,7 @@
 - Tests navigateur Playwright.
 - Simulation synthétique du moteur.
 - Déploiement GitHub Pages.
+- Icône SVG SYNAPTIK intégrée comme favicon, déclarée dans le manifeste et précachée par le service worker.
 
 ## Mesure actuelle
 
@@ -51,7 +52,7 @@ La version 1.1 améliore l’intégrité de mesure sans revendiquer de validatio
 
 La documentation du dépôt mentionne des validations CI réussies pour des versions antérieures et des parcours Chromium multi-tailles. Ces résultats ne doivent pas être extrapolés automatiquement à une future modification du moteur.
 
-Le présent ajout du protocole ne modifie aucun code d’application.
+La modification d’icône ne touche pas au moteur cognitif ni au modèle de mesure.
 
 ## Points à améliorer
 
@@ -66,7 +67,11 @@ Le présent ajout du protocole ne modifie aucun code d’application.
 
 ## Bugs ouverts
 
-Aucun bug bloquant n’est consigné ici au moment de l’installation du protocole. Les nouveaux bugs doivent être ajoutés à ce fichier puis, une fois compris, transformés en règle dans `BUG_RULES.md`.
+Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajoutés à ce fichier puis, une fois compris, transformés en règle dans `BUG_RULES.md`.
+
+## Dernière modification importante
+
+Ajout de `public/icon.svg`, déclaration comme favicon et icône PWA complémentaire, et ajout au précache du service worker. Les PNG 192, 512 et maskable sont conservés pour la compatibilité d’installation.
 
 ## Prochaine priorité scientifique
 

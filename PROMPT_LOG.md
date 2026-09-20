@@ -2,6 +2,25 @@
 
 Ce journal commence avec l’adoption du protocole de développement assisté par IA. Les demandes antérieures restent documentées par l’historique Git et les fichiers techniques existants.
 
+## 2026-09-20 — Intégration de l’icône SVG SYNAPTIK
+
+### Demande
+Créer une icône SVG originale pour SYNAPTIK et l’intégrer directement au dépôt.
+
+### Action
+- ajout de `public/icon.svg` ;
+- ajout du favicon SVG dans `index.html` ;
+- déclaration du SVG dans `public/manifest.webmanifest` tout en conservant les PNG existants ;
+- ajout du SVG au précache de `public/sw.js`.
+
+### Sécurité / compatibilité
+Aucun changement du moteur cognitif, du scoring, du stockage ou des sessions. Les icônes PNG restent présentes pour la compatibilité PWA et maskable.
+
+### Résultat
+Intégration effectuée dans le dépôt ; validation CI déclenchée par le push.
+
+---
+
 ## 2026-09-20 — Adoption du protocole CR3@TIX adapté à SYNAPTIK
 
 ### Demande
