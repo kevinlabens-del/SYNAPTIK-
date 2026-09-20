@@ -1,5 +1,19 @@
 # SYNAPTIK TEST QI — Historique des demandes de développement
 
+## 2026-09-20 — Protection du bouton Soutien pendant les exercices
+
+### Demande
+S’assurer que le bouton CR3@TIX Soutien n’interfère jamais avec les exercices.
+
+### Action
+- bouton masqué sur Démonstration, Analyse et Entraînement ;
+- retrait du focus clavier lorsqu’il est masqué ;
+- détection basée sur l’état de page SYNAPTIK avec garde supplémentaire sur la présence d’un exercice ;
+- réapparition automatique dès le retour sur une page non-exercice ;
+- tests Playwright sur les trois parcours.
+
+---
+
 ## 2026-09-20 — Bouton CR3@TIX Soutien
 
 ### Demande

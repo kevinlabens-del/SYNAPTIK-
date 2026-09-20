@@ -79,6 +79,29 @@
     `;
 
     root.append(style, link);
+
+    const HIDDEN_PAGES = new Set(['demo', 'test', 'practice']);
+
+    function syncVisibility() {
+      const page = document.documentElement.dataset.synaptikPage || '';
+      const exerciseActive =
+        HIDDEN_PAGES.has(page) || Boolean(document.querySelector('.exercise'));
+      host.hidden = exerciseActive;
+      host.setAttribute('aria-hidden', exerciseActive ? 'true' : 'false');
+      link.tabIndex = exerciseActive ? -1 : 0;
+      if (exerciseActive && root.activeElement === link) link.blur();
+    }
+
+    syncVisibility();
+    window.addEventListener('synaptik-page-change', () => {
+      requestAnimationFrame(syncVisibility);
+    });
+
+    const pageObserver = new MutationObserver(syncVisibility);
+    pageObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-synaptik-page'],
+    });
   }
 
   if (document.readyState === 'loading') {

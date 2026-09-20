@@ -11,7 +11,7 @@
 - PWA React/TypeScript/Vite.
 - Interface FR/EN.
 - Mention de création CR3@TIX dans le footer.
-- Bouton flottant CR3@TIX Soutien relié à l’application officielle de soutien.
+- Bouton flottant CR3@TIX Soutien relié à l’application officielle de soutien, automatiquement masqué pendant les exercices.
 - Navigation multipage par routes hash compatibles GitHub Pages.
 - Menu burger latéral remplaçant les anciens onglets horizontaux.
 - Six domaines cognitifs.
@@ -76,7 +76,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Ajout du bouton officiel **❤ Soutenir** de CR3@TIX SOUTIEN dans SYNAPTIK TEST QI. Le composant est repris du projet CR3@TIX Soutien et ouvre `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/` dans un nouvel onglet sécurisé. Le script est précaché pour rester disponible avec la PWA.
+Protection des exercices contre le bouton CR3@TIX Soutien : le contrôle flottant est désormais entièrement masqué et retiré de la navigation clavier pendant les démonstrations, l’évaluation et l’entraînement. Il réapparaît automatiquement sur les écrans non-exercice. Cette règle évite tout recouvrement, clic accidentel ou distraction pendant une tâche, notamment chronométrée.
 
 ## Prochaine priorité scientifique
 

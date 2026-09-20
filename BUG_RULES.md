@@ -107,3 +107,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** GitHub Pages contient la nouvelle version mais un appareil continue d’afficher un ancien `index.html` servi par le cache.
 
 **Règle permanente :** les navigations doivent être réseau d’abord en ligne et cache d’abord uniquement pour les ressources statiques versionnées. Le service worker doit être enregistré avec `updateViaCache: "none"` et conserver un repli hors ligne fonctionnel.
+
+## BUG-021 — Contrôle flottant perturbant un exercice
+
+**Risque :** un bouton flottant externe recouvre une option, intercepte un toucher, prend le focus ou distrait pendant une tâche, notamment chronométrée.
+
+**Règle permanente :** le bouton CR3@TIX Soutien doit être totalement masqué et non focusable sur les pages Démonstration, Analyse et Entraînement, ainsi que lorsqu’un composant `.exercise` est actif. Il ne peut réapparaître que sur une page non-exercice.

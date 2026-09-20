@@ -94,6 +94,8 @@ npm run simulate
 - [ ] aucune recharge automatique pendant préparation, démonstration, test ou résultat ;
 - [ ] compatibilité du chemin `/SYNAPTIK-/`.
 - [ ] bouton CR3@TIX Soutien présent et lié à l’URL officielle ;
+- [ ] bouton CR3@TIX Soutien masqué pendant démonstration, analyse et entraînement ;
+- [ ] bouton Soutien non focusable tant qu’un exercice est actif ;
 - [ ] script du bouton disponible dans le cache PWA.
 
 ## Navigation multipage

@@ -90,7 +90,7 @@ Routes stables : exploration, préparation, démonstration, analyse, résultat, 
 
 ## Intégration CR3@TIX Soutien
 
-SYNAPTIK TEST QI affiche le bouton flottant officiel « ❤ Soutenir » de CR3@TIX Soutien. Son URL canonique est `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/`. Le bouton doit rester indépendant du moteur cognitif et ne doit pas modifier les données de session.
+SYNAPTIK TEST QI affiche le bouton flottant officiel « ❤ Soutenir » de CR3@TIX Soutien. Son URL canonique est `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/`. Le bouton doit rester indépendant du moteur cognitif, ne doit pas modifier les données de session et doit être entièrement masqué/non focusable pendant toute démonstration, analyse ou séance d’entraînement.
 
 ## Identité visuelle durable
 
