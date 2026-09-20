@@ -71,7 +71,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Correction de la localisation française : les textes d’interface auparavant codés en anglais sont désormais traduits lorsque FR est sélectionné, tout en conservant le mode EN. Sont concernés notamment le grand titre, le CTA, la marque, la cartographie neuronale, les actions des domaines, les noms de modes et d’appareils, les résultats, l’historique, l’entraînement, la méthodologie, le réseau cognitif et les sous-types visibles.
+Correction de la localisation française : les textes d’interface auparavant codés en anglais sont désormais traduits lorsque FR est sélectionné, tout en conservant le mode EN. Le défaut de validation E2E provoqué par le renommage accessible « Language » → « Langue » a été corrigé en ciblant le sélecteur de langue de façon indépendante du texte affiché.
 
 ## Prochaine priorité scientifique
 

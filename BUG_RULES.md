@@ -63,3 +63,11 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** un libellé codé en dur ou un identifiant technique apparaît en anglais malgré la sélection FR.
 
 **Règle permanente :** tout texte visible, nom de mode ou sous-type présenté à l’utilisateur doit dépendre de la langue active. Les identifiants internes peuvent rester en anglais, mais leur affichage doit passer par la couche de localisation. Les tests E2E doivent conserver des vérifications explicites des principaux libellés français.
+
+## BUG-014 — Test lié à un libellé traduit
+
+**Symptôme :** l’application fonctionne et compile, mais le test E2E expire après la traduction d’un libellé d’accessibilité.
+
+**Cause :** le test recherchait littéralement « Language » alors que l’interface française expose désormais « Langue ».
+
+**Règle permanente :** pour les contrôles dont le nom change avec la langue, les tests E2E doivent utiliser un sélecteur stable ou accepter explicitement les deux langues, afin qu’une traduction légitime ne soit pas interprétée comme une régression fonctionnelle.

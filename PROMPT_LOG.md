@@ -1,5 +1,18 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Correction du test E2E de langue
+
+### Incident
+Les builds, tests unitaires et le déploiement Pages réussissaient, mais la validation navigateur échouait car Playwright cherchait encore le libellé accessible « Language » après sa traduction en « Langue ».
+
+### Correction
+Le test cible désormais le sélecteur de langue du header sans dépendre de son texte localisé.
+
+### Résultat attendu
+La validation complète doit pouvoir repasser au vert sans modifier le comportement de l’application.
+
+---
+
 ## 2026-09-20 — Correction des textes anglais en mode français
 
 ### Demande
