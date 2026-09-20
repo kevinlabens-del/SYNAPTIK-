@@ -1,4 +1,4 @@
-import type { Lang, Domain } from "../cognitive/types";
+import type { Lang, Domain, Mode } from "../cognitive/types";
 export const names: Record<Lang, Record<Domain, string>> = {
   fr: {
     logic: "Logique",
@@ -17,13 +17,59 @@ export const names: Record<Lang, Record<Domain, string>> = {
     speed: "Speed",
   },
 };
+
+export const modeNames: Record<Lang, Record<Mode, string>> = {
+  fr: { quick: "Rapide", standard: "Standard", deep: "Approfondi" },
+  en: { quick: "Quick", standard: "Standard", deep: "Deep" },
+};
+
+export const deviceNames: Record<Lang, Record<string, string>> = {
+  fr: { smartphone: "Smartphone", tablet: "Tablette", computer: "Ordinateur" },
+  en: { smartphone: "Smartphone", tablet: "Tablet", computer: "Computer" },
+};
+
+export const domainActions: Record<Lang, string[]> = {
+  fr: ["DÉDUIRE", "TOURNER", "RÉSOUDRE", "MÉMORISER", "RELIER", "TRAITER"],
+  en: ["DEDUCE", "ROTATE", "RESOLVE", "RECALL", "CONNECT", "PROCESS"],
+};
+
+const subtypeNamesFR: Record<string, string> = {
+  progression: "progression",
+  proportion: "proportion",
+  alternating: "alternance",
+  conditional: "logique conditionnelle",
+  "symbol-rule": "règle symbolique",
+  order: "ordre",
+  reflection: "réflexion",
+  rotation: "rotation",
+  "reverse-digits": "chiffres inversés",
+  "digit-sequence": "séquence de chiffres",
+  analogy: "analogie",
+  relation: "relation",
+  completion: "complétion",
+  "symbol-match": "comparaison de symboles",
+  "visual-search": "recherche visuelle",
+  "two-back": "mémoire à 2 positions",
+  "solid-cube-stacks": "empilements de cubes",
+  "original-matrix": "matrice originale",
+  categorization: "catégorisation",
+  "contextual-meaning": "sens contextuel",
+  "paired-symbol-memory": "mémoire de symboles appariés",
+  "position-memory": "mémoire de positions",
+};
+
+export function subtypeName(lang: Lang, subtype: string) {
+  if (lang === "fr") return subtypeNamesFR[subtype] ?? subtype.replaceAll("-", " ");
+  return subtype.replaceAll("-", " ");
+}
+
 export const labels = {
   fr: {
     home: "Exploration",
     history: "Mes résultats",
     practice: "Entraînement",
     method: "Méthodologie",
-    start: "BEGIN ANALYSIS",
+    start: "COMMENCER L’ANALYSE",
     local: "LOCAL FIRST · AUCUNE TRANSMISSION",
     next: "Valider ma réponse",
     resume: "Reprendre mon évaluation",
