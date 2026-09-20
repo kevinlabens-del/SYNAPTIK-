@@ -58,7 +58,7 @@ export function Neural({ lang, scores }: { lang: Lang; scores?: number[] }) {
         {scores ? "Σ" : "S"}
       </text>
       <text x="350" y="375" textAnchor="middle" className="micro">
-        COGNITIVE NETWORK
+        {lang === "fr" ? "RÉSEAU COGNITIF" : "COGNITIVE NETWORK"}
       </text>
     </svg>
   );
