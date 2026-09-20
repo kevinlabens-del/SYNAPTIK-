@@ -1,5 +1,21 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Correction des textes anglais en mode français
+
+### Demande
+Remplacer les textes anglais encore visibles lorsque l’application est réglée sur FR.
+
+### Action
+Traduction du titre d’accueil, CTA, sous-titre de marque, cartographie neuronale, actions des domaines, modes, appareils, démonstration, résultats, historique, entraînement, méthodologie, réseau cognitif et sous-types affichés. Le mode EN reste disponible.
+
+### Test anti-régression
+Le parcours Playwright utilise désormais les principaux libellés français.
+
+### Résultat
+Correction intégrée au dépôt et validation CI déclenchée par les pushes.
+
+---
+
 Ce journal commence avec l’adoption du protocole de développement assisté par IA. Les demandes antérieures restent documentées par l’historique Git et les fichiers techniques existants.
 
 ## 2026-09-20 — Intégration de l’icône SVG SYNAPTIK
