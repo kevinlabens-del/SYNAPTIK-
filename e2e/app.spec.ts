@@ -12,7 +12,7 @@ for (const [width, height] of sizes)
     await page.setViewportSize({ width, height });
     await page.goto("/");
     await expect(
-      page.getByRole("button", { name: /BEGIN ANALYSIS/ }),
+      page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
     expect(
       await page.evaluate(
@@ -23,7 +23,7 @@ for (const [width, height] of sizes)
       path: `test-results/home-${width}.png`,
       fullPage: true,
     });
-    await page.getByRole("button", { name: /BEGIN ANALYSIS/ }).click();
+    await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -37,12 +37,12 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await page.getByRole("button", { name: /BEGIN ANALYSIS/ }).click();
-  await page.getByRole("button", { name: /quick/i }).click();
+  await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
+  await page.getByRole("button", { name: /Rapide/i }).click();
   await page.getByRole("button", { name: /3 exercices/ }).click();
   for (let n = 0; n < 3; n++) {
     await expect(
-      page.getByText(`DEMO ${n + 1}/3`, { exact: false }),
+      page.getByText(`DÉMO ${n + 1}/3`, { exact: false }),
     ).toBeVisible();
     await page.locator(".option").first().waitFor();
     await page.locator(".option").first().click();
@@ -136,7 +136,7 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   await context.setOffline(true);
   await page.reload();
   await expect(
-    page.getByRole("button", { name: /BEGIN ANALYSIS/ }),
+    page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Mes résultats", exact: true })
