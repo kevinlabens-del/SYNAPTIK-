@@ -51,6 +51,8 @@ La version 1.1 introduit notamment :
 - écran de préparation des tâches de vitesse ;
 - séparation du temps de sélection et du délai de confirmation.
 
+La version 1.2 conserve toutes les règles de mesure 1.1 et porte la fenêtre de réponse des nouvelles tâches de vitesse à 12 secondes après lecture libre de la consigne. Le chrono reste arrêté jusqu’à l’action explicite de l’utilisateur. Les sessions 1.1 historiques conservent leur comportement antérieur.
+
 Les anciennes sessions doivent conserver leur logique historique.
 
 ## Règles permanentes
@@ -61,6 +63,7 @@ Les anciennes sessions doivent conserver leur logique historique.
 - L’entraînement ne doit pas contaminer l’évaluation.
 - Les données restent locales sauf changement explicitement décidé.
 - Les réponses correctes ne doivent pas être révélées pendant une évaluation.
+- La correction détaillée des réponses n’est visible qu’après la fin de l’évaluation.
 - Une reprise de session doit rester cohérente et traçable.
 
 ## Architecture canonique

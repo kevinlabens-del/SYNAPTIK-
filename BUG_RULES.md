@@ -77,3 +77,21 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** une nouvelle version recharge l’application pendant une préparation, une démonstration, une évaluation ou immédiatement sur le résultat.
 
 **Règle permanente :** les mises à jour peuvent être téléchargées et activées silencieusement, mais la recharge automatique du client est autorisée uniquement sur les pages sûres : accueil, historique, entraînement et méthodologie. Une mise à jour détectée sur un écran sensible est différée jusqu’au prochain écran sûr ou jusqu’au prochain lancement de l’application.
+
+## BUG-016 — Interface trop serrée sur petit mobile
+
+**Risque :** cartes, options, matrices, boutons ou grands titres débordent ou deviennent trop étroits sur des écrans de 320 à 560 px.
+
+**Règle permanente :** tester au minimum 320 px, 360 px et 390 px de large. Sur petit écran, privilégier une colonne, borner SVG/matrices à 100 % de la largeur disponible et empêcher les enfants flex/grid d’imposer une largeur minimale.
+
+## BUG-017 — Fenêtre de vitesse trop courte pour lire
+
+**Risque :** l’utilisateur consomme une partie du temps de réponse simplement pour comprendre la consigne.
+
+**Règle permanente :** la consigne d’une tâche de vitesse doit être entièrement lisible avant le démarrage du chrono. Pour les sessions 1.2, le chrono démarre uniquement après action explicite et la fenêtre de réponse est de 12 secondes. Toute nouvelle modification du temps doit être versionnée.
+
+## BUG-018 — Impossible d’apprendre de ses erreurs
+
+**Risque :** le résultat global indique une faiblesse sans permettre d’identifier les questions ratées.
+
+**Règle permanente :** après une session terminée, rendre disponible une correction détaillée avec question, réponse utilisateur, bonne réponse et explication. Ne jamais afficher ces informations avant la fin de l’évaluation.

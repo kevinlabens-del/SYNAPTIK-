@@ -216,3 +216,156 @@
     color: #111;
   }
 }
+
+
+@media (max-width: 560px) {
+  .shell {
+    width: 100%;
+    padding-left: max(14px, 4vw);
+    padding-right: max(14px, 4vw);
+  }
+  main,
+  .reading,
+  .test-wrap,
+  .results,
+  .exercise,
+  .hero-copy,
+  .hero-network,
+  .result-grid > *,
+  .profile-list > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  header nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  header nav::-webkit-scrollbar {
+    display: none;
+  }
+  header nav button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .hero-copy h1 {
+    font-size: clamp(2.65rem, 13vw, 3.55rem);
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+  }
+  .reading,
+  .test-wrap,
+  .results {
+    width: 100%;
+    margin: 24px auto;
+  }
+  .modes,
+  .form-grid,
+  .profile-list,
+  .review-answer-grid {
+    grid-template-columns: 1fr;
+  }
+  .modes button {
+    width: 100%;
+    min-width: 0;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 14px;
+  }
+  .profile-list article {
+    padding: 18px 16px;
+    border-right: 0;
+  }
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .actions > button,
+  .primary {
+    width: 100%;
+  }
+  .exercise h2,
+  .review-body h3,
+  .option {
+    overflow-wrap: anywhere;
+  }
+  .options:has(.pattern-grid) {
+    grid-template-columns: 1fr;
+  }
+  .pattern-grid,
+  .pattern-model .pattern-grid,
+  .review-pattern-grid {
+    max-width: min(70vw, 180px);
+    height: auto;
+  }
+  .cube-scene,
+  .spatial-grid {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
+  .matrix,
+  .review-matrix {
+    width: 100%;
+    max-width: 100%;
+  }
+  .matrix span,
+  .review-matrix span {
+    min-height: 54px;
+    padding: 7px;
+    font-size: clamp(0.76rem, 3.8vw, 1rem);
+  }
+  .test-top > div {
+    min-width: 0;
+  }
+  .answer-review {
+    margin: 42px 0;
+    padding-top: 28px;
+  }
+  .answer-review-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .answer-review-summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .answer-review-item summary {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px 12px;
+    padding: 14px;
+  }
+  .review-status {
+    grid-column: 2;
+    text-align: left;
+  }
+  .review-body {
+    padding: 4px 14px 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .hero-copy h1 {
+    font-size: clamp(2.35rem, 13vw, 3rem);
+  }
+  .brand {
+    font-size: 1.35rem;
+  }
+  header > select {
+    max-width: 92px;
+  }
+  .option {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

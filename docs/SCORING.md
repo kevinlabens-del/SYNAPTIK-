@@ -42,3 +42,10 @@ Domain limits now use discrete posterior 2.5%/97.5% quantiles, rather than a sym
 A domain is flagged as limited if it has fewer than 12 usable answers OR posterior SD exceeds 0.65 theta units. These are explicit product warning thresholds, not validated psychometric acceptance criteria. Passing them never means clinical validity. Quick is always exploratory. Normal-theory percentile endpoints display <1 and >99 rather than a false absolute rank.
 
 Speed tasks have an instruction/ready screen without stimuli. Their measured response duration ends at the final permitted selection (or the deadline if unanswered), not at confirmation. `selectionTime` and `timedOut` are recorded separately. Reading time and confirmation delay no longer contaminate speed durations. The accuracy-based 3PL model remains unchanged; speed latency is descriptive, not calibrated processing speed.
+
+
+## Version 1.2 — speed response window
+
+New sessions store `testVersion: "1.2"` and retain all version 1.1 measurement rules. Speed-task instructions remain visible with the timer stopped until the user explicitly starts the timed phase. The response window for new 1.2 speed tasks is 12 seconds instead of the earlier 8-second engineering default. Historical 1.1 sessions keep their earlier timing behavior.
+
+This is a usability/measurement-procedure change, not evidence of improved validity. Speed remains experimental and is not clinically calibrated.

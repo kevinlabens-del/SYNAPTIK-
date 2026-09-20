@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 const sizes = [
+  [320, 568],
   [360, 640],
   [390, 844],
   [412, 915],
@@ -65,7 +66,10 @@ test("complete Quick assessment, restore history, practice and offline reload", 
     if (n % 6 === 5) {
       await expect(page.locator(".option")).toHaveCount(0);
       if (n === 5) await page.waitForTimeout(8500);
-      await page.getByRole("button", { name: "Je suis prêt" }).click();
+      await expect(page.getByText(/12 secondes/)).toBeVisible();
+      await page
+        .getByRole("button", { name: /démarrer le chrono/i })
+        .click();
       await expect(page.locator(".option").first()).toBeEnabled();
     }
     await page.locator(".option").first().waitFor();
@@ -87,6 +91,11 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   }
   await expect(page.getByText("Votre empreinte cognitive")).toBeVisible();
   await expect(page.locator(".profile-list article")).toHaveCount(6);
+  await expect(page.locator(".answer-review-item")).toHaveCount(36);
+  await page.locator(".answer-review-item").first().locator("summary").click();
+  await expect(
+    page.locator(".answer-review-item").first(),
+  ).toContainText("BONNE RÉPONSE");
   const stored = await page.evaluate(
     () =>
       new Promise<{
@@ -113,7 +122,7 @@ test("complete Quick assessment, restore history, practice and offline reload", 
         };
       }),
   );
-  expect(stored.testVersion).toBe("1.1");
+  expect(stored.testVersion).toBe("1.2");
   expect(stored.answers[3].excluded).toBe(true);
   expect(stored.answers[5].duration).toBe(stored.answers[5].selectionTime);
   expect(stored.answers[5].duration).toBeLessThan(8000);

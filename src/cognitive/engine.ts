@@ -123,7 +123,7 @@ export function selectItem(s: Session, bank: Item[], previous: string[] = []) {
       !used.has(i.id) &&
       !usedContent.has(itemFingerprint(i)),
   );
-  const modern = s.testVersion === "1.1";
+  const modern = s.testVersion !== "1";
   const history = domainAnswers(s, bank, d);
   const families = new Map<string, number>();
   for (const a of history) {
@@ -203,13 +203,13 @@ export function report(s: Session, b: Item[]) {
       100 +
         15 *
           (e.theta +
-            ((s.testVersion === "1.1" ? e.lower : e.theta - 1.96 * e.se) -
+            ((s.testVersion !== "1" ? e.lower : e.theta - 1.96 * e.se) -
               e.theta) *
               inflation),
       100 +
         15 *
           (e.theta +
-            ((s.testVersion === "1.1" ? e.upper : e.theta + 1.96 * e.se) -
+            ((s.testVersion !== "1" ? e.upper : e.theta + 1.96 * e.se) -
               e.theta) *
               inflation),
     ].map(Math.round);

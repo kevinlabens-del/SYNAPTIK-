@@ -3,7 +3,7 @@
 **Dernière mise à jour protocole :** 2026-09-20  
 **Branche principale :** main  
 **Version package :** 1.0.0  
-**Version de mesure des nouvelles sessions :** 1.1  
+**Version de mesure des nouvelles sessions :** 1.2  
 **Statut :** application fonctionnelle et publiée ; mesure encore expérimentale
 
 ## Ce qui fonctionne
@@ -18,6 +18,7 @@
 - Sauvegarde et reprise via IndexedDB.
 - Historique.
 - Rapport de résultats.
+- Correction détaillée de chaque réponse après une évaluation terminée.
 - Export JSON.
 - Service worker et fonctionnement hors ligne prévu.
 - Tests unitaires Vitest.
@@ -71,7 +72,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Mise à jour PWA automatisée : suppression de la bannière manuelle « mise à jour prête ». L’application vérifie les nouvelles versions au lancement, au retour au premier plan et périodiquement. Le nouveau service worker s’active automatiquement ; la page ne se recharge que sur les écrans sûrs (accueil, historique, entraînement, méthodologie). Les pages préparation, démonstration, test et résultat ne sont jamais interrompues par une recharge automatique.
+Amélioration mobile et pédagogique : responsive renforcé jusqu’à 320 px, cartes de résultats empilées sur petit écran, visuels et matrices bornés à la largeur disponible. Les nouvelles sessions passent en version 1.2 : les tâches de vitesse laissent lire la consigne sans chrono puis accordent 12 secondes après démarrage explicite. Le résultat final contient désormais une correction détaillée repliable de toutes les réponses, avec réponse donnée, bonne réponse et explication.
 
 ## Prochaine priorité scientifique
 

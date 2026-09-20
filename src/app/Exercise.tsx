@@ -30,12 +30,14 @@ export function Exercise({
   lang,
   practice = false,
   resumed = false,
+  timeLimit,
 }: {
   item: Item;
   onAnswer: (a: Omit<Answer, "theta">) => void;
   lang: Lang;
   practice?: boolean;
   resumed?: boolean;
+  timeLimit?: number;
 }) {
   const [ready, setReady] = useState(item.domain !== "speed");
   const selectedAt = useRef<number | null>(null);
@@ -50,6 +52,11 @@ export function Exercise({
   const interrupted = useRef(resumed);
   const submitted = useRef(false);
   const fr = lang === "fr";
+  const responseLimit =
+    timeLimit ??
+    (practice && item.domain === "speed"
+      ? Math.max(12, item.estimatedTime)
+      : item.estimatedTime);
   useEffect(() => {
     if (!ready) return;
     start.current = performance.now();
@@ -71,7 +78,7 @@ export function Exercise({
       : undefined;
     const deadline =
       item.domain === "speed"
-        ? setTimeout(() => setExpired(true), item.estimatedTime * 1000)
+        ? setTimeout(() => setExpired(true), responseLimit * 1000)
         : undefined;
     return () => {
       document.removeEventListener("visibilitychange", hidden);
@@ -79,11 +86,11 @@ export function Exercise({
       clearTimeout(deadline);
       clearInterval(sequenceTimer);
     };
-  }, [item, ready]);
+  }, [item, ready, responseLimit]);
   function choose(i: number) {
     if (
       item.domain === "speed" &&
-      performance.now() - start.current >= item.estimatedTime * 1000
+      performance.now() - start.current >= responseLimit * 1000
     ) {
       setExpired(true);
       return;
@@ -104,7 +111,7 @@ export function Exercise({
       correct: choice === item.correctAnswer,
       duration:
         item.domain === "speed"
-          ? (selectedAt.current ?? item.estimatedTime * 1000)
+          ? (selectedAt.current ?? responseLimit * 1000)
           : performance.now() - start.current,
       selectionTime: selectedAt.current ?? undefined,
       timedOut: expired,
@@ -123,11 +130,13 @@ export function Exercise({
         <h2>{item.prompt}</h2>
         <p>
           {fr
-            ? `Tu disposeras de ${item.estimatedTime} secondes pour choisir. Le chronomètre commence après ce bouton ; la confirmation n'entre pas dans le temps de réponse.`
-            : `You will have ${item.estimatedTime} seconds to choose. Timing starts after this button; confirmation is not included in response time.`}
+            ? `Prends le temps de lire la consigne : le chronomètre est arrêté. Après le bouton, tu auras ${responseLimit} secondes pour choisir. La confirmation n’entre pas dans le temps de réponse.`
+            : `Take your time to read the instructions: the timer is stopped. After the button, you will have ${responseLimit} seconds to choose. Confirmation is not included in response time.`}
         </p>
         <button className="primary" onClick={() => setReady(true)}>
-          {fr ? "Je suis prêt" : "I am ready"}
+          {fr
+            ? "J’ai lu la consigne · démarrer le chrono"
+            : "I read the instructions · start timer"}
         </button>
       </section>
     );
@@ -148,7 +157,7 @@ export function Exercise({
       )}
       <p className="eyebrow">
         {subtypeName(lang, item.subtype)}{" "}
-        {item.domain === "speed" && ` · ${item.estimatedTime} s`}
+        {item.domain === "speed" && ` · ${responseLimit} s`}
       </p>
       <h2>{item.prompt}</h2>
       {item.sequence && exposed && (

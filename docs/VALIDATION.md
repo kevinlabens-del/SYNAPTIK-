@@ -37,3 +37,8 @@ Audit final de répétition : 12 tests unitaires passent après ajout d'une vér
 Added tests for interrupted-answer exclusion, asymmetric posterior quantiles, medium-difficulty starts, subtype coverage and legacy interval compatibility. Browser flow includes the new speed readiness screen. Existing synthetic results describe the earlier selector; they must not be used to validate version 1.1 or human measurement accuracy.
 
 The new selector is simulated separately in `SIMULATION-1.1.json` (2,800 synthetic Quick sessions). This is model recovery under assumed parameters, not an empirical accuracy comparison. Browser regression waits longer than the deadline on the readiness screen and checks that confirmation delay is excluded from stored speed duration.
+
+
+## Version 1.2 regression checks
+
+Browser regression now includes a 320×568 viewport, verifies the 12-second speed window after an untimed instruction screen, checks that completed Quick sessions expose 36 post-test review entries, and continues to test offline reload and session persistence. Version 1.2 retains version 1.1 posterior/exclusion logic; legacy version 1 sessions retain their historical interval behavior.

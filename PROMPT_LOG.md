@@ -1,5 +1,25 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Responsive mobile, chrono vitesse et correction détaillée
+
+### Demande
+Améliorer l’adaptation aux écrans mobiles, éviter que certaines questions chronométrées expirent avant une lecture confortable et permettre de revoir toutes les erreurs après le test.
+
+### Action
+- responsive renforcé jusqu’à 320 px ;
+- modes, résultats, matrices, visuels, boutons et correction adaptés aux petits écrans ;
+- nouvelles sessions en version 1.2 ;
+- consigne des tâches Vitesse lisible sans chrono ;
+- fenêtre de réponse Vitesse portée à 12 secondes après démarrage explicite ;
+- ancienne logique préservée pour les sessions 1.1 ;
+- ajout d’une correction détaillée uniquement après la fin du test ;
+- chaque réponse indique la question, la réponse choisie, la bonne réponse, l’explication et le temps.
+
+### Sécurité psychométrique
+Les bonnes réponses restent invisibles pendant l’évaluation. Le changement de temps est versionné pour ne pas réinterpréter silencieusement les anciennes sessions.
+
+---
+
 ## 2026-09-20 — Auto-update silencieux de la PWA
 
 ### Demande

@@ -25,6 +25,7 @@ Le navigateur Playwright doit être installé lorsque nécessaire.
 ## Viewports à préserver
 
 Le parcours E2E doit continuer à couvrir au minimum les tailles déjà documentées :
+- 320×568
 - 360×640
 - 390×844
 - 412×915
@@ -63,6 +64,10 @@ npm run simulate
 - [ ] Les démonstrations ne créent pas de réponse évaluée.
 - [ ] Le changement de langue ne modifie pas rétroactivement un score terminé.
 - [ ] Les tâches de vitesse n’incluent pas le délai de confirmation.
+- [ ] une session 1.2 affiche 12 s après lecture libre de la consigne ;
+- [ ] une session historique 1.1 conserve son comportement antérieur ;
+- [ ] la correction détaillée n’est disponible qu’après la fin de l’évaluation ;
+- [ ] chaque réponse terminée retrouve son item, sa réponse et la bonne réponse.
 - [ ] Les percentiles ne sont pas présentés comme normes observées.
 - [ ] Les limites et avertissements restent visibles.
 

@@ -21,6 +21,7 @@ import * as db from "../storage/store";
 import { labels, names, modeNames, deviceNames, domainActions } from "./i18n";
 import { Neural } from "./Neural";
 import { Exercise } from "./Exercise";
+import { AnswerReview } from "./AnswerReview";
 type Page =
   | "home"
   | "setup"
@@ -130,7 +131,7 @@ export default function App() {
       answers: [],
       interruptions: 0,
       status: "active",
-      testVersion: "1.1",
+      testVersion: "1.2",
       calibrationStatus: "experimental",
     };
     s.currentId = selectItem(s, bank)?.id;
@@ -140,7 +141,7 @@ export default function App() {
   }
   async function answer(a: Omit<Answer, "theta">) {
     if (!session) return;
-    if (session.testVersion !== "1.1") a = { ...a, excluded: undefined };
+    if (session.testVersion === "1") a = { ...a, excluded: undefined };
     setResumed(false);
     const item = bank.find((i) => i.id === a.itemId)!;
     const theta = estimate(
@@ -475,6 +476,11 @@ export default function App() {
               item={item}
               resumed={resumed}
               lang={lang}
+              timeLimit={
+                session.testVersion === "1.2" && item.domain === "speed"
+                  ? Math.max(12, item.estimatedTime)
+                  : item.estimatedTime
+              }
               onAnswer={(a) => void answer(a)}
             />
             {import.meta.env.DEV &&
@@ -618,6 +624,7 @@ export default function App() {
                 </article>
               ))}
             </div>
+            <AnswerReview session={session} bank={sessionBank} lang={lang} />
             <h2>{fr ? "Lecture du profil" : "Profile interpretation"}</h2>
             <p>
               {fr

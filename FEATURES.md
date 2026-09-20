@@ -5,6 +5,7 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Fonction | Statut | Source principale |
 |---|---:|---|
 | Interface FR/EN | ✅ | `src/app` |
+| Responsive mobile renforcé jusqu’à 320 px | ✅ | `src/styles/responsive.css` |
 | Six domaines cognitifs | ✅ | `src/cognitive/types.ts` |
 | Quick 36 items | ✅ | `src/cognitive/types.ts` |
 | Standard 72 items | ✅ | `src/cognitive/types.ts` |
@@ -18,11 +19,12 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Démonstrations facultatives, séparées du démarrage | ✅ | `src/app` |
 | Démarrage direct de l’évaluation après préparation | ✅ | `src/app` |
 | Entraînement indépendant | ✅ | `src/app` |
-| Tâches de vitesse avec écran ready | ✅ | v1.1 |
+| Tâches de vitesse avec lecture libre puis fenêtre de 12 s pour les nouvelles sessions | ✅ | v1.2 |
 | Sauvegarde IndexedDB | ✅ | `src/storage` |
 | Reprise de session | ✅ | app + stockage |
 | Historique | ✅ | app + stockage |
 | Rapport final | ✅ | app |
+| Correction détaillée post-test : question, réponse donnée, bonne réponse et explication | ✅ | `src/app/AnswerReview.tsx` |
 | Impression du rapport | ✅ | app |
 | Export JSON | ✅ | app |
 | PWA / service worker | ✅ | `public` + build |
