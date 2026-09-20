@@ -241,27 +241,29 @@ describe("version 1.1 measurement integrity", () => {
 });
 
 
-describe("version 1.2 procedure compatibility", () => {
-  it("retains 1.1 exclusion and posterior interval behavior", () => {
-    const s = fresh();
-    s.testVersion = "1.2";
-    const item = bank[0];
-    s.answers = [
-      {
-        ...response(item.id, true),
-        interrupted: true,
-        excluded: true,
-      },
-    ];
-    expect(report(s, bank).validCount).toBe(0);
+describe("versions 1.2 and 1.3 procedure compatibility", () => {
+  for (const version of ["1.2", "1.3"]) {
+    it(`${version} retains 1.1 exclusion and posterior interval behavior`, () => {
+      const s = fresh();
+      s.testVersion = version;
+      const item = bank[0];
+      s.answers = [
+        {
+          ...response(item.id, true),
+          interrupted: true,
+          excluded: true,
+        },
+      ];
+      expect(report(s, bank).validCount).toBe(0);
 
-    s.answers = bank
-      .filter((i) => i.domain === "logic")
-      .slice(0, 6)
-      .map((i) => response(i.id, true));
-    const p = report(s, bank).profiles[0];
-    expect(p.interval[0]).not.toBe(
-      Math.round(100 + 15 * (p.theta - 1.96 * p.se)),
-    );
-  });
+      s.answers = bank
+        .filter((i) => i.domain === "logic")
+        .slice(0, 6)
+        .map((i) => response(i.id, true));
+      const p = report(s, bank).profiles[0];
+      expect(p.interval[0]).not.toBe(
+        Math.round(100 + 15 * (p.theta - 1.96 * p.se)),
+      );
+    });
+  }
 });

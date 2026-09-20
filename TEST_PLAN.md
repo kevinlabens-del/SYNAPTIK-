@@ -64,7 +64,8 @@ npm run simulate
 - [ ] Les démonstrations ne créent pas de réponse évaluée.
 - [ ] Le changement de langue ne modifie pas rétroactivement un score terminé.
 - [ ] Les tâches de vitesse n’incluent pas le délai de confirmation.
-- [ ] une session 1.2 affiche 12 s après lecture libre de la consigne ;
+- [ ] une session 1.3 affiche la question sans chrono, masque le stimulus/les choix, puis démarre 8 s après « Je suis prêt » ;
+- [ ] une session historique 1.2 conserve sa fenêtre de 12 s ;
 - [ ] une session historique 1.1 conserve son comportement antérieur ;
 - [ ] la correction détaillée n’est disponible qu’après la fin de l’évaluation ;
 - [ ] chaque réponse terminée retrouve son item, sa réponse et la bonne réponse.

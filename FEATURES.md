@@ -19,7 +19,7 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Démonstrations facultatives, séparées du démarrage | ✅ | `src/app` |
 | Démarrage direct de l’évaluation après préparation | ✅ | `src/app` |
 | Entraînement indépendant | ✅ | `src/app` |
-| Tâches de vitesse avec lecture libre puis fenêtre de 12 s pour les nouvelles sessions | ✅ | v1.2 |
+| Tâches de vitesse : lecture libre, bouton « Je suis prêt », puis stimulus chronométré 8 s | ✅ | v1.3 |
 | Sauvegarde IndexedDB | ✅ | `src/storage` |
 | Reprise de session | ✅ | app + stockage |
 | Historique | ✅ | app + stockage |

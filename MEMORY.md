@@ -51,7 +51,9 @@ La version 1.1 introduit notamment :
 - écran de préparation des tâches de vitesse ;
 - séparation du temps de sélection et du délai de confirmation.
 
-La version 1.2 conserve toutes les règles de mesure 1.1 et porte la fenêtre de réponse des nouvelles tâches de vitesse à 12 secondes après lecture libre de la consigne. Le chrono reste arrêté jusqu’à l’action explicite de l’utilisateur. Les sessions 1.1 historiques conservent leur comportement antérieur.
+La version 1.2 conserve toutes les règles de mesure 1.1 et a utilisé une fenêtre de 12 secondes pour les tâches de vitesse.
+
+La version 1.3 revient à la fenêtre originale de 8 secondes, tout en séparant explicitement la lecture et l’exercice : la question/consigne est lisible sans chrono, puis l’utilisateur appuie sur « Je suis prêt ». Le stimulus chronométré et les choix n’apparaissent qu’à ce moment-là et les 8 secondes commencent alors. Les sessions 1.2 historiques conservent leur durée de 12 secondes.
 
 Les anciennes sessions doivent conserver leur logique historique.
 

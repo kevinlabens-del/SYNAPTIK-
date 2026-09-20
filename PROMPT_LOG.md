@@ -1,5 +1,23 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Chrono Vitesse 8 s après « Je suis prêt »
+
+### Demande
+Conserver les 8 secondes des exercices de vitesse, mais permettre de lire la question avant que le temps ne démarre.
+
+### Action
+- nouvelles sessions en version 1.3 ;
+- question/consigne affichée sans chronomètre ;
+- aucun stimulus chronométré ni choix visible pendant cette phase ;
+- bouton « Je suis prêt » ;
+- apparition du stimulus et démarrage des 8 secondes uniquement après ce bouton ;
+- sessions 1.2 conservées à 12 secondes pour compatibilité historique.
+
+### Objectif de mesure
+Réduire la contamination du temps de réponse par la lecture de la consigne, sans allonger artificiellement la fenêtre de résolution.
+
+---
+
 ## 2026-09-20 — Responsive mobile, chrono vitesse et correction détaillée
 
 ### Demande

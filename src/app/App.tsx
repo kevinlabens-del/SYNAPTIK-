@@ -131,7 +131,7 @@ export default function App() {
       answers: [],
       interruptions: 0,
       status: "active",
-      testVersion: "1.2",
+      testVersion: "1.3",
       calibrationStatus: "experimental",
     };
     s.currentId = selectItem(s, bank)?.id;

@@ -52,11 +52,7 @@ export function Exercise({
   const interrupted = useRef(resumed);
   const submitted = useRef(false);
   const fr = lang === "fr";
-  const responseLimit =
-    timeLimit ??
-    (practice && item.domain === "speed"
-      ? Math.max(12, item.estimatedTime)
-      : item.estimatedTime);
+  const responseLimit = timeLimit ?? item.estimatedTime;
   useEffect(() => {
     if (!ready) return;
     start.current = performance.now();
@@ -130,13 +126,11 @@ export function Exercise({
         <h2>{item.prompt}</h2>
         <p>
           {fr
-            ? `Prends le temps de lire la consigne : le chronomètre est arrêté. Après le bouton, tu auras ${responseLimit} secondes pour choisir. La confirmation n’entre pas dans le temps de réponse.`
-            : `Take your time to read the instructions: the timer is stopped. After the button, you will have ${responseLimit} seconds to choose. Confirmation is not included in response time.`}
+            ? `Lis tranquillement la question : le chronomètre est arrêté. Quand tu appuieras sur « Je suis prêt », l’exercice apparaîtra et tu auras ${responseLimit} secondes pour répondre. La confirmation n’entre pas dans le temps de réponse.`
+            : `Read the question at your own pace: the timer is stopped. When you press “I’m ready”, the exercise will appear and you will have ${responseLimit} seconds to answer. Confirmation is not included in response time.`}
         </p>
         <button className="primary" onClick={() => setReady(true)}>
-          {fr
-            ? "J’ai lu la consigne · démarrer le chrono"
-            : "I read the instructions · start timer"}
+          {fr ? "Je suis prêt" : "I’m ready"}
         </button>
       </section>
     );

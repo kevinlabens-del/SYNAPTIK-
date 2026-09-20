@@ -3,7 +3,7 @@
 **Dernière mise à jour protocole :** 2026-09-20  
 **Branche principale :** main  
 **Version package :** 1.0.0  
-**Version de mesure des nouvelles sessions :** 1.2  
+**Version de mesure des nouvelles sessions :** 1.3  
 **Statut :** application fonctionnelle et publiée ; mesure encore expérimentale
 
 ## Ce qui fonctionne
@@ -72,7 +72,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Amélioration mobile et pédagogique : responsive renforcé jusqu’à 320 px, cartes de résultats empilées sur petit écran, visuels et matrices bornés à la largeur disponible. Les nouvelles sessions passent en version 1.2 : les tâches de vitesse laissent lire la consigne sans chrono puis accordent 12 secondes après démarrage explicite. Le résultat final contient désormais une correction détaillée repliable de toutes les réponses, avec réponse donnée, bonne réponse et explication.
+Chronométrage Vitesse affiné : les nouvelles sessions passent en version 1.3. La durée revient à 8 secondes, mais uniquement après une phase de lecture non chronométrée. La question/consigne est affichée seule ; l’utilisateur appuie sur « Je suis prêt », puis le stimulus et les réponses apparaissent et le chrono de 8 secondes démarre. Les sessions 1.2 conservent leur fenêtre historique de 12 secondes.
 
 ## Prochaine priorité scientifique
 

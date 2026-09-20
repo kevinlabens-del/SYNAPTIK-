@@ -42,3 +42,8 @@ The new selector is simulated separately in `SIMULATION-1.1.json` (2,800 synthet
 ## Version 1.2 regression checks
 
 Browser regression now includes a 320×568 viewport, verifies the 12-second speed window after an untimed instruction screen, checks that completed Quick sessions expose 36 post-test review entries, and continues to test offline reload and session persistence. Version 1.2 retains version 1.1 posterior/exclusion logic; legacy version 1 sessions retain their historical interval behavior.
+
+
+## Version 1.3 regression checks
+
+Browser regression verifies that the first speed item can remain on the untimed instruction screen for longer than eight seconds without expiring, that the instruction reports an 8-second response window, that the “Je suis prêt” action reveals the answer controls, and that new sessions store `testVersion: "1.3"`. Version 1.2 compatibility remains documented and its 12-second historical procedure is preserved when such a session is resumed.

@@ -66,9 +66,9 @@ test("complete Quick assessment, restore history, practice and offline reload", 
     if (n % 6 === 5) {
       await expect(page.locator(".option")).toHaveCount(0);
       if (n === 5) await page.waitForTimeout(8500);
-      await expect(page.getByText(/12 secondes/)).toBeVisible();
+      await expect(page.getByText(/8 secondes/)).toBeVisible();
       await page
-        .getByRole("button", { name: /démarrer le chrono/i })
+        .getByRole("button", { name: /^Je suis prêt$/i })
         .click();
       await expect(page.locator(".option").first()).toBeEnabled();
     }
@@ -122,7 +122,7 @@ test("complete Quick assessment, restore history, practice and offline reload", 
         };
       }),
   );
-  expect(stored.testVersion).toBe("1.2");
+  expect(stored.testVersion).toBe("1.3");
   expect(stored.answers[3].excluded).toBe(true);
   expect(stored.answers[5].duration).toBe(stored.answers[5].selectionTime);
   expect(stored.answers[5].duration).toBeLessThan(8000);

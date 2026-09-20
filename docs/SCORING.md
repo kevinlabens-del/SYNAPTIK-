@@ -49,3 +49,10 @@ Speed tasks have an instruction/ready screen without stimuli. Their measured res
 New sessions store `testVersion: "1.2"` and retain all version 1.1 measurement rules. Speed-task instructions remain visible with the timer stopped until the user explicitly starts the timed phase. The response window for new 1.2 speed tasks is 12 seconds instead of the earlier 8-second engineering default. Historical 1.1 sessions keep their earlier timing behavior.
 
 This is a usability/measurement-procedure change, not evidence of improved validity. Speed remains experimental and is not clinically calibrated.
+
+
+## Version 1.3 — untimed reading, 8-second stimulus
+
+New sessions store `testVersion: "1.3"` and retain the version 1.1 measurement rules. The speed response window returns to the original 8 seconds. The procedure is explicitly split into two phases: the question/instruction is shown without a timer and without the timed stimulus or answer choices; after the user presses “I’m ready”, the stimulus and choices appear and the 8-second response window starts.
+
+Historical version 1.2 sessions retain their 12-second timing when resumed. This change is intended to separate reading time from timed task performance, not to claim psychometric validation of the speed score.

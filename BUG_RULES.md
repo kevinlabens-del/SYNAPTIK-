@@ -84,11 +84,11 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 
 **Règle permanente :** tester au minimum 320 px, 360 px et 390 px de large. Sur petit écran, privilégier une colonne, borner SVG/matrices à 100 % de la largeur disponible et empêcher les enfants flex/grid d’imposer une largeur minimale.
 
-## BUG-017 — Fenêtre de vitesse trop courte pour lire
+## BUG-017 — Lecture contaminant le temps de vitesse
 
-**Risque :** l’utilisateur consomme une partie du temps de réponse simplement pour comprendre la consigne.
+**Risque :** l’utilisateur consomme une partie de la fenêtre chronométrée simplement pour comprendre la question.
 
-**Règle permanente :** la consigne d’une tâche de vitesse doit être entièrement lisible avant le démarrage du chrono. Pour les sessions 1.2, le chrono démarre uniquement après action explicite et la fenêtre de réponse est de 12 secondes. Toute nouvelle modification du temps doit être versionnée.
+**Règle permanente :** la question/consigne d’une tâche de vitesse doit être entièrement lisible sans chrono. Pour les nouvelles sessions 1.3, le stimulus et les choix restent cachés jusqu’au bouton « Je suis prêt » ; ils apparaissent ensuite en même temps que démarre la fenêtre de 8 secondes. Toute modification future de cette procédure doit être versionnée. Les sessions 1.2 conservent leurs 12 secondes historiques.
 
 ## BUG-018 — Impossible d’apprendre de ses erreurs
 
