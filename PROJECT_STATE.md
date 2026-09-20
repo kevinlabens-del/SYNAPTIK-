@@ -76,7 +76,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Protection des exercices contre le bouton CR3@TIX Soutien : le contrôle flottant est désormais entièrement masqué et retiré de la navigation clavier pendant les démonstrations, l’évaluation et l’entraînement. Il réapparaît automatiquement sur les écrans non-exercice. Cette règle évite tout recouvrement, clic accidentel ou distraction pendant une tâche, notamment chronométrée.
+Protection renforcée du bouton CR3@TIX Soutien : le Shadow DOM réinitialisait les styles de l’hôte et pouvait neutraliser l’attribut `hidden`. Le composant applique maintenant explicitement `display:none` et désactive les événements pointeur sur les pages Démonstration, Analyse et Entraînement. Le bouton est également masqué dès son montage si un exercice est déjà actif, afin d’éviter tout flash visuel.
 
 ## Prochaine priorité scientifique
 

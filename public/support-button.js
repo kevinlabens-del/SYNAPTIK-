@@ -17,6 +17,10 @@
     const host = document.createElement('div');
     host.id = HOST_ID;
     host.setAttribute('data-cr3atix-support', '');
+    const initialPage = document.documentElement.dataset.synaptikPage || '';
+    host.hidden =
+      ['demo', 'test', 'practice'].includes(initialPage) ||
+      Boolean(document.querySelector('.exercise'));
     document.body.appendChild(host);
 
     const root = host.attachShadow({ mode: 'open' });
@@ -31,6 +35,11 @@
     const style = document.createElement('style');
     style.textContent = `
       :host { all: initial; }
+      :host([hidden]),
+      :host([aria-hidden="true"]) {
+        display: none !important;
+        pointer-events: none !important;
+      }
       a {
         position: fixed;
         right: max(12px, env(safe-area-inset-right));

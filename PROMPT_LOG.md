@@ -1,5 +1,17 @@
 # SYNAPTIK TEST QI — Historique des demandes de développement
 
+## 2026-09-20 — Correction réelle du masquage Shadow DOM
+
+### Cause
+Le composant Soutien applique `:host { all: initial; }`. Cette réinitialisation pouvait neutraliser le comportement visuel de l’attribut HTML `hidden`.
+
+### Correction
+- règle explicite `:host([hidden]), :host([aria-hidden="true"])` avec `display:none !important` ;
+- événements pointeur désactivés pendant le masquage ;
+- état initial calculé avant l’affichage du composant pour éviter un flash pendant un exercice.
+
+---
+
 ## 2026-09-20 — Correction du test Shadow DOM du bouton Soutien
 
 ### Incident
