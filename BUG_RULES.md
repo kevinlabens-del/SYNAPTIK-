@@ -57,3 +57,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 ## BUG-012 — Design générique
 
 **Règle permanente :** les nouvelles pages doivent réutiliser les tokens, la typographie, le langage neuronal et les composants existants plutôt que créer un second langage graphique.
+
+## BUG-013 — Texte anglais visible en mode français
+
+**Risque :** un libellé codé en dur ou un identifiant technique apparaît en anglais malgré la sélection FR.
+
+**Règle permanente :** tout texte visible, nom de mode ou sous-type présenté à l’utilisateur doit dépendre de la langue active. Les identifiants internes peuvent rester en anglais, mais leur affichage doit passer par la couche de localisation. Les tests E2E doivent conserver des vérifications explicites des principaux libellés français.
