@@ -38,6 +38,31 @@ self.addEventListener("fetch", (event) => {
     new URL(event.request.url).origin !== self.location.origin
   )
     return;
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => {
+              cache.put(event.request, copy);
+              cache.put("./index.html", response.clone());
+            });
+          }
+          return response;
+        })
+        .catch(async () => {
+          return (
+            (await caches.match(event.request)) ||
+            (await caches.match("./index.html")) ||
+            Response.error()
+          );
+        }),
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(
       (hit) =>
@@ -50,11 +75,7 @@ self.addEventListener("fetch", (event) => {
             }
             return response;
           })
-          .catch(() =>
-            event.request.mode === "navigate"
-              ? caches.match("./index.html")
-              : Response.error(),
-          ),
+          .catch(() => Response.error()),
     ),
   );
 });

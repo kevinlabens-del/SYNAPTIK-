@@ -74,7 +74,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Renommage public de l’application : le nom officiel affiché devient **SYNAPTIK TEST QI**. Le nom visible dans l’en-tête, le menu, le titre navigateur, les métadonnées HTML et le manifeste PWA a été harmonisé. Le dépôt GitHub reste `SYNAPTIK-` pour préserver les liens et le déploiement existants.
+Correction du cache de mise à jour : les navigations utilisent désormais une stratégie réseau d’abord lorsque l’appareil est en ligne, avec repli sur le cache hors ligne. L’enregistrement du service worker utilise `updateViaCache: "none"` et vérifie aussi les mises à jour au retour en ligne et lors d’un `pageshow`. Cela évite qu’une ancienne page HTML reste affichée après un déploiement GitHub Pages réussi.
 
 ## Prochaine priorité scientifique
 

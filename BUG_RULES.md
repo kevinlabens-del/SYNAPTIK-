@@ -101,3 +101,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** une navigation multipage utilisant des chemins serveur provoque des 404 sur GitHub Pages, ou un rechargement perd l’écran courant.
 
 **Règle permanente :** utiliser les routes hash de SYNAPTIK, maintenir la correspondance route et état React, tester retour/avant navigateur et rechargement hors ligne, et restaurer depuis IndexedDB les écrans nécessitant une session lorsque c’est possible.
+
+## BUG-020 — Ancienne interface persistante après un déploiement réussi
+
+**Risque :** GitHub Pages contient la nouvelle version mais un appareil continue d’afficher un ancien `index.html` servi par le cache.
+
+**Règle permanente :** les navigations doivent être réseau d’abord en ligne et cache d’abord uniquement pour les ressources statiques versionnées. Le service worker doit être enregistré avec `updateViaCache: "none"` et conserver un repli hors ligne fonctionnel.

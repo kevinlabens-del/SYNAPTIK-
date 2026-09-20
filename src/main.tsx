@@ -35,7 +35,7 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
     let hadController = Boolean(navigator.serviceWorker.controller);
 
     navigator.serviceWorker
-      .register("./sw.js")
+      .register("./sw.js", { updateViaCache: "none" })
       .then((reg) => {
         const activate = (worker: ServiceWorker | null) => {
           worker?.postMessage("ACTIVATE");
@@ -71,6 +71,8 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
 
         checkForUpdate();
         window.addEventListener("focus", checkForUpdate);
+        window.addEventListener("online", checkForUpdate);
+        window.addEventListener("pageshow", checkForUpdate);
         document.addEventListener("visibilitychange", () => {
           if (document.visibilityState === "visible") checkForUpdate();
         });

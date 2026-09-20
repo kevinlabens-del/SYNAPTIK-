@@ -1,5 +1,21 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Correction du cache après déploiement
+
+### Incident
+GitHub Pages avait publié le bon artefact, mais un appareil pouvait continuer à afficher une ancienne interface depuis le cache du service worker.
+
+### Vérification
+L’artefact réellement déployé contient bien le nom « SYNAPTIK TEST QI », le menu burger et les routes multipages.
+
+### Correction
+- navigation réseau d’abord quand une connexion est disponible ;
+- repli sur le cache uniquement hors ligne ou en cas d’échec réseau ;
+- mise à jour du service worker avec `updateViaCache: "none"` ;
+- nouvelle vérification au retour en ligne et lors du retour sur la page.
+
+---
+
 ## 2026-09-20 — Renommage en SYNAPTIK TEST QI
 
 ### Demande
