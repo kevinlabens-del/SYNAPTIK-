@@ -167,11 +167,11 @@ test("complete Quick assessment, restore history, practice and offline reload", 
 
   await page.screenshot({ path: "test-results/results.png", fullPage: true });
   await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
-  await page.getByRole("link", { name: "Mes résultats", exact: true }).click();
+  await page.getByRole("link", { name: /Mes résultats/ }).click();
   await expect(page).toHaveURL(/#\/resultats$/);
   await expect(page.locator(".history-row")).toHaveCount(1);
   await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
-  await page.getByRole("link", { name: "Entraînement", exact: true }).click();
+  await page.getByRole("link", { name: /Entraînement/ }).click();
   await expect(page).toHaveURL(/#\/entrainement$/);
   await page.locator(".option").first().click();
   await page.getByRole("button", { name: /Valider ma réponse/ }).click();
@@ -182,7 +182,7 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   await expect(page).toHaveURL(/#\/entrainement$/);
   await expect(page.getByRole("heading", { name: "Entraînement" })).toBeVisible();
   await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
-  await page.getByRole("link", { name: "Mes résultats", exact: true }).click();
+  await page.getByRole("link", { name: /Mes résultats/ }).click();
   await expect(page).toHaveURL(/#\/resultats$/);
   await expect(page.locator(".history-row")).toHaveCount(1);
   expect(errors).toEqual([]);
