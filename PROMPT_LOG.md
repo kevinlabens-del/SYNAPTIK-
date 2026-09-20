@@ -1,5 +1,23 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Auto-update silencieux de la PWA
+
+### Demande
+Remplacer la notification « Mise à jour prête · recharger après votre session » par un système de mise à jour automatique.
+
+### Action
+- suppression de la bannière de mise à jour ;
+- vérification automatique au lancement, au retour au premier plan et toutes les 30 minutes ;
+- activation automatique du nouveau service worker ;
+- recharge automatique uniquement sur une page sans risque ;
+- aucune recharge forcée pendant préparation, démonstration, évaluation ou lecture du résultat ;
+- conservation du fonctionnement hors ligne.
+
+### Test anti-régression
+Playwright vérifie l’absence de la bannière et l’exposition de l’état de page utilisé par le système de mise à jour.
+
+---
+
 ## 2026-09-20 — Séparation analyse / démonstrations
 
 ### Demande

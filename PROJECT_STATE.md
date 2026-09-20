@@ -71,7 +71,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Séparation du démarrage et des démonstrations : après choix du mode, « Démarrer l’analyse » lance directement la session notée. Un second bouton « Voir les 3 exercices de démonstration » ouvre trois exercices facultatifs et non notés ; à leur fin, l’utilisateur revient à la préparation sans création automatique d’une session.
+Mise à jour PWA automatisée : suppression de la bannière manuelle « mise à jour prête ». L’application vérifie les nouvelles versions au lancement, au retour au premier plan et périodiquement. Le nouveau service worker s’active automatiquement ; la page ne se recharge que sur les écrans sûrs (accueil, historique, entraînement, méthodologie). Les pages préparation, démonstration, test et résultat ne sont jamais interrompues par une recharge automatique.
 
 ## Prochaine priorité scientifique
 

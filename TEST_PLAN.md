@@ -84,6 +84,8 @@ npm run simulate
 - [ ] cache versionné ;
 - [ ] chargement hors ligne ;
 - [ ] mise à jour après nouveau build ;
+- [ ] mise à jour automatique silencieuse sans bannière ;
+- [ ] aucune recharge automatique pendant préparation, démonstration, test ou résultat ;
 - [ ] compatibilité du chemin `/SYNAPTIK-/`.
 
 ## UI

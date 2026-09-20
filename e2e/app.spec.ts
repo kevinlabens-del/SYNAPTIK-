@@ -11,6 +11,11 @@ for (const [width, height] of sizes)
   test(`layout ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
+    await expect(page.locator(".update-banner")).toHaveCount(0);
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-synaptik-page",
+      "home",
+    );
     await expect(
       page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
@@ -24,6 +29,10 @@ for (const [width, height] of sizes)
       fullPage: true,
     });
     await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-synaptik-page",
+      "setup",
+    );
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

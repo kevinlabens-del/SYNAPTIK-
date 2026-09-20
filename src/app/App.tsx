@@ -70,6 +70,10 @@ export default function App() {
     document.documentElement.lang = lang;
   }, [page, lang]);
   useEffect(() => {
+    document.documentElement.dataset.synaptikPage = page;
+    window.dispatchEvent(new Event("synaptik-page-change"));
+  }, [page]);
+  useEffect(() => {
     db.list()
       .then(setSessions)
       .catch(() =>

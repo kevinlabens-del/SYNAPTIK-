@@ -26,6 +26,7 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Impression du rapport | ✅ | app |
 | Export JSON | ✅ | app |
 | PWA / service worker | ✅ | `public` + build |
+| Mise à jour PWA automatique et silencieuse, avec recharge différée pendant les écrans sensibles | ✅ | `src/main.tsx` + service worker |
 | Fonctionnement hors ligne | ✅ | vérifié par e2e selon docs |
 | Réseau neuronal visuel | ✅ | `src/app/Neural.tsx` |
 | Tests unitaires | ✅ | `tests` |

@@ -13,7 +13,8 @@ self.addEventListener("install", (event) =>
           "./icon-512.png",
           "./icon-maskable.png",
         ]),
-      ),
+      )
+      .then(() => self.skipWaiting()),
   ),
 );
 self.addEventListener("activate", (event) =>

@@ -71,3 +71,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Cause :** le test recherchait littéralement « Language » alors que l’interface française expose désormais « Langue ».
 
 **Règle permanente :** pour les contrôles dont le nom change avec la langue, les tests E2E doivent utiliser un sélecteur stable ou accepter explicitement les deux langues, afin qu’une traduction légitime ne soit pas interprétée comme une régression fonctionnelle.
+
+## BUG-015 — Mise à jour interrompant une évaluation
+
+**Risque :** une nouvelle version recharge l’application pendant une préparation, une démonstration, une évaluation ou immédiatement sur le résultat.
+
+**Règle permanente :** les mises à jour peuvent être téléchargées et activées silencieusement, mais la recharge automatique du client est autorisée uniquement sur les pages sûres : accueil, historique, entraînement et méthodologie. Une mise à jour détectée sur un écran sensible est différée jusqu’au prochain écran sûr ou jusqu’au prochain lancement de l’application.
