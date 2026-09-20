@@ -6,6 +6,7 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 |---|---:|---|
 | Interface FR/EN | ✅ | `src/app` |
 | Crédit créateur CR3@TIX dans le footer | ✅ | `src/app/App.tsx` |
+| Bouton CR3@TIX Soutien flottant | ✅ | `public/support-button.js` |
 | Navigation multipage hash + menu burger | ✅ | `src/app/App.tsx` + styles |
 | Responsive mobile renforcé jusqu’à 320 px | ✅ | `src/styles/responsive.css` |
 | Six domaines cognitifs | ✅ | `src/cognitive/types.ts` |

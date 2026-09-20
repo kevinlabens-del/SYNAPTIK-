@@ -88,6 +88,10 @@ SYNAPTIK TEST QI utilise une navigation multipage côté application avec des ro
 
 Routes stables : exploration, préparation, démonstration, analyse, résultat, résultats, entraînement et méthodologie. Le rechargement d’une route d’analyse doit tenter de restaurer la session active depuis IndexedDB.
 
+## Intégration CR3@TIX Soutien
+
+SYNAPTIK TEST QI affiche le bouton flottant officiel « ❤ Soutenir » de CR3@TIX Soutien. Son URL canonique est `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/`. Le bouton doit rester indépendant du moteur cognitif et ne doit pas modifier les données de session.
+
 ## Identité visuelle durable
 
 Fond très sombre, cyan lumineux, bleu et violet, structure technique/neuronale, typographie principale Inter avec micro-libellés monospace, angles plutôt nets et faible rayon.

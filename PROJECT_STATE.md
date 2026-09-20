@@ -11,6 +11,7 @@
 - PWA React/TypeScript/Vite.
 - Interface FR/EN.
 - Mention de création CR3@TIX dans le footer.
+- Bouton flottant CR3@TIX Soutien relié à l’application officielle de soutien.
 - Navigation multipage par routes hash compatibles GitHub Pages.
 - Menu burger latéral remplaçant les anciens onglets horizontaux.
 - Six domaines cognitifs.
@@ -75,7 +76,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Ajout permanent de la mention de création dans le footer : **« Créé par CR3@TIX »** en français et **« Created by CR3@TIX »** en anglais. La mention est intégrée au design et couverte par le test navigateur.
+Ajout du bouton officiel **❤ Soutenir** de CR3@TIX SOUTIEN dans SYNAPTIK TEST QI. Le composant est repris du projet CR3@TIX Soutien et ouvre `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/` dans un nouvel onglet sécurisé. Le script est précaché pour rester disponible avec la PWA.
 
 ## Prochaine priorité scientifique
 

@@ -12,6 +12,7 @@ self.addEventListener("install", (event) =>
           "./icon-192.png",
           "./icon-512.png",
           "./icon-maskable.png",
+          "./support-button.js",
         ]),
       )
       .then(() => self.skipWaiting()),

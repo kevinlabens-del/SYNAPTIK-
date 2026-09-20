@@ -93,6 +93,8 @@ npm run simulate
 - [ ] mise à jour automatique silencieuse sans bannière ;
 - [ ] aucune recharge automatique pendant préparation, démonstration, test ou résultat ;
 - [ ] compatibilité du chemin `/SYNAPTIK-/`.
+- [ ] bouton CR3@TIX Soutien présent et lié à l’URL officielle ;
+- [ ] script du bouton disponible dans le cache PWA.
 
 ## Navigation multipage
 

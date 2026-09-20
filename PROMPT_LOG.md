@@ -1,5 +1,20 @@
 # SYNAPTIK TEST QI — Historique des demandes de développement
 
+## 2026-09-20 — Bouton CR3@TIX Soutien
+
+### Demande
+Ajouter à SYNAPTIK TEST QI le bouton de soutien déjà utilisé par l’application CR3@TIX Soutien.
+
+### Action
+- reprise du composant officiel « ❤ Soutenir » ;
+- lien vers `https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/` ;
+- ouverture sécurisée dans un nouvel onglet ;
+- intégration via Shadow DOM pour éviter les conflits CSS ;
+- ajout au précache de la PWA ;
+- test Playwright du bouton et de son lien.
+
+---
+
 ## 2026-09-20 — Mention « Créé par CR3@TIX »
 
 ### Demande

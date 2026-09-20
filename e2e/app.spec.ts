@@ -28,6 +28,12 @@ for (const [width, height] of sizes)
       page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
     await expect(page.getByText(/Créé par CR3@TIX/i)).toBeVisible();
+    const supportButton = page.locator("#cr3atix-support-button-host").locator("a");
+    await expect(supportButton).toHaveAttribute(
+      "href",
+      "https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/",
+    );
+    await expect(supportButton).toContainText("Soutenir");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
