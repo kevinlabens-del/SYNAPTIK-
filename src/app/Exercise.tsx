@@ -1,6 +1,7 @@
 import { Cubes } from "./Cubes";
 import { useEffect, useRef, useState } from "react";
 import type { Item, Answer, Lang } from "../cognitive/types";
+import { subtypeName } from "./i18n";
 function Grid({ cells }: { cells: number[] }) {
   return (
     <svg
@@ -146,7 +147,7 @@ export function Exercise({
         </p>
       )}
       <p className="eyebrow">
-        {item.subtype.replaceAll("-", " ")}{" "}
+        {subtypeName(lang, item.subtype)}{" "}
         {item.domain === "speed" && ` · ${item.estimatedTime} s`}
       </p>
       <h2>{item.prompt}</h2>
