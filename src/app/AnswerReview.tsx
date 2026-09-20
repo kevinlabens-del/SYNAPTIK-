@@ -8,9 +8,9 @@ function Grid({ cells, lang }: { cells: number[]; lang: Lang }) {
       className="review-pattern-grid"
       viewBox="0 0 120 120"
       role="img"
-      aria-label={\`\${lang === "fr" ? "Cases" : "Cells"} : \${cells
+      aria-label={`${lang === "fr" ? "Cases" : "Cells"} : ${cells
         .map((c) => c + 1)
-        .join(", ")}\`}
+        .join(", ")}`}
     >
       {Array.from({ length: 9 }, (_, i) => (
         <rect
@@ -119,7 +119,7 @@ function ReviewRow({
 
   return (
     <details
-      className={\`answer-review-item \${answer.correct ? "is-correct" : "is-wrong"} \${answer.excluded ? "is-excluded" : ""}\`}
+      className={`answer-review-item ${answer.correct ? "is-correct" : "is-wrong"} ${answer.excluded ? "is-excluded" : ""}`}
     >
       <summary>
         <span className="review-number">{String(index + 1).padStart(2, "0")}</span>
@@ -154,12 +154,12 @@ function ReviewRow({
         <p className="small review-meta">
           {fr ? "Temps de réponse" : "Response time"} :{" "}
           {(answer.duration / 1000).toFixed(1)} s
-          {answer.timedOut ? \` · \${fr ? "temps écoulé" : "timed out"}\` : ""}
+          {answer.timedOut ? ` · ${fr ? "temps écoulé" : "timed out"}` : ""}
           {answer.interrupted
-            ? \` · \${fr ? "interruption détectée" : "interruption detected"}\`
+            ? ` · ${fr ? "interruption détectée" : "interruption detected"}`
             : ""}
           {answer.excluded
-            ? \` · \${fr ? "non utilisée dans le score" : "not used in score"}\`
+            ? ` · ${fr ? "non utilisée dans le score" : "not used in score"}`
             : ""}
         </p>
       </div>
@@ -218,7 +218,7 @@ export function AnswerReview({
       <div className="answer-review-list">
         {rows.map(({ answer, item, index }) => (
           <ReviewRow
-            key={\`\${answer.itemId}-\${index}\`}
+            key={`${answer.itemId}-${index}`}
             answer={answer}
             item={item}
             index={index}
