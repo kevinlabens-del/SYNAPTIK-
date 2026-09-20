@@ -12,6 +12,10 @@ for (const [width, height] of sizes)
   test(`layout ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
+    await expect(page).toHaveURL(/#\/exploration$/);
+    await expect(
+      page.getByRole("button", { name: /Ouvrir le menu/ }),
+    ).toBeVisible();
     await expect(page.locator(".update-banner")).toHaveCount(0);
     await expect(page.locator("html")).toHaveAttribute(
       "data-synaptik-page",
@@ -30,6 +34,7 @@ for (const [width, height] of sizes)
       fullPage: true,
     });
     await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
+    await expect(page).toHaveURL(/#\/preparation$/);
     await expect(page.locator("html")).toHaveAttribute(
       "data-synaptik-page",
       "setup",
@@ -40,6 +45,23 @@ for (const [width, height] of sizes)
       ),
     ).toBe(true);
   });
+test("burger navigation exposes distinct application pages", async ({ page }) => {
+  await page.goto("/#/exploration");
+  await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
+  await expect(page.getByRole("navigation", { name: /Menu principal/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Mes résultats" })).toHaveAttribute(
+    "href",
+    "#/resultats",
+  );
+  await page.getByRole("link", { name: "Mes résultats" }).click();
+  await expect(page).toHaveURL(/#\/resultats$/);
+  await expect(page.getByRole("heading", { name: "Mes résultats" })).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/exploration$/);
+  await expect(
+    page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
+  ).toBeVisible();
+});
 test("complete Quick assessment, restore history, practice and offline reload", async ({
   page,
   context,
@@ -144,23 +166,24 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   }
 
   await page.screenshot({ path: "test-results/results.png", fullPage: true });
-  await page
-    .getByRole("button", { name: "Mes résultats", exact: true })
-    .click();
+  await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
+  await page.getByRole("link", { name: "Mes résultats", exact: true }).click();
+  await expect(page).toHaveURL(/#\/resultats$/);
   await expect(page.locator(".history-row")).toHaveCount(1);
-  await page.getByRole("button", { name: "Entraînement", exact: true }).click();
+  await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
+  await page.getByRole("link", { name: "Entraînement", exact: true }).click();
+  await expect(page).toHaveURL(/#\/entrainement$/);
   await page.locator(".option").first().click();
   await page.getByRole("button", { name: /Valider ma réponse/ }).click();
   await expect(page.locator(".feedback")).toBeVisible();
   await page.evaluate(() => navigator.serviceWorker.ready);
   await context.setOffline(true);
   await page.reload();
-  await expect(
-    page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Mes résultats", exact: true })
-    .click();
+  await expect(page).toHaveURL(/#\/entrainement$/);
+  await expect(page.getByRole("heading", { name: "Entraînement" })).toBeVisible();
+  await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
+  await page.getByRole("link", { name: "Mes résultats", exact: true }).click();
+  await expect(page).toHaveURL(/#\/resultats$/);
   await expect(page.locator(".history-row")).toHaveCount(1);
   expect(errors).toEqual([]);
 });

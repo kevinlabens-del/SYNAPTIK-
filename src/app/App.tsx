@@ -31,6 +31,26 @@ type Page =
   | "history"
   | "practice"
   | "method";
+
+const pageRoutes: Record<Page, string> = {
+  home: "exploration",
+  setup: "preparation",
+  demo: "demonstration",
+  test: "analyse",
+  result: "resultat",
+  history: "resultats",
+  practice: "entrainement",
+  method: "methodologie",
+};
+
+const routePages = Object.fromEntries(
+  Object.entries(pageRoutes).map(([page, route]) => [route, page]),
+) as Record<string, Page>;
+
+function pageFromHash(): Page {
+  const route = location.hash.replace(/^#\/?/, "").split(/[?&]/)[0];
+  return routePages[route] ?? "home";
+}
 function download(data: unknown, name: string) {
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
@@ -43,8 +63,10 @@ function download(data: unknown, name: string) {
 }
 export default function App() {
   const [lang, setLang] = useState<Lang>("fr");
-  const [page, setPage] = useState<Page>("home");
+  const [page, setPage] = useState<Page>(() => pageFromHash());
+  const [menuOpen, setMenuOpen] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [mode, setMode] = useState<Mode>("standard");
   const [age, setAge] = useState("25–44");
@@ -67,19 +89,49 @@ export default function App() {
   );
   const r = session ? report(session, sessionBank) : null;
   useEffect(() => {
+    const onHashChange = () => setPage(pageFromHash());
+    window.addEventListener("hashchange", onHashChange);
+    if (!location.hash) location.hash = `#/${pageRoutes.home}`;
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+  useEffect(() => {
     window.scrollTo(0, 0);
     document.documentElement.lang = lang;
-  }, [page, lang]);
-  useEffect(() => {
     document.documentElement.dataset.synaptikPage = page;
+    const wantedHash = `#/${pageRoutes[page]}`;
+    if (location.hash !== wantedHash) location.hash = wantedHash;
+    setMenuOpen(false);
     window.dispatchEvent(new Event("synaptik-page-change"));
-  }, [page]);
+    const titles: Record<Page, string> = {
+      home: fr ? "Exploration" : "Explore",
+      setup: fr ? "Préparation" : "Preparation",
+      demo: fr ? "Démonstration" : "Demonstration",
+      test: fr ? "Analyse" : "Assessment",
+      result: fr ? "Résultat" : "Result",
+      history: fr ? "Mes résultats" : "My results",
+      practice: fr ? "Entraînement" : "Practice",
+      method: fr ? "Méthodologie" : "Methodology",
+    };
+    document.title = `SYNAPTIK — ${titles[page]}`;
+  }, [page, lang, fr]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
   useEffect(() => {
     db.list()
-      .then(setSessions)
-      .catch(() =>
-        setError("Stockage indisponible : autorise les données locales."),
-      );
+      .then((stored) => {
+        setSessions(stored);
+        setStorageReady(true);
+      })
+      .catch(() => {
+        setStorageReady(true);
+        setError("Stockage indisponible : autorise les données locales.");
+      });
     const fn = () => setOnline(navigator.onLine);
     window.addEventListener("online", fn);
     window.addEventListener("offline", fn);
@@ -99,6 +151,30 @@ export default function App() {
     document.addEventListener("visibilitychange", handler);
     return () => document.removeEventListener("visibilitychange", handler);
   }, [session, page]);
+  useEffect(() => {
+    if (!storageReady || session) return;
+    if (page === "test") {
+      const current = sessions.find((s) => s.status === "active");
+      if (current) {
+        setResumed(true);
+        setLang(current.lang);
+        setSession(current);
+      } else {
+        setPage("home");
+      }
+    }
+    if (page === "result") {
+      const latest = [...sessions]
+        .filter((s) => s.status === "complete")
+        .sort((a, b) => b.created.localeCompare(a.created))[0];
+      if (latest) {
+        setLang(latest.lang);
+        setSession(latest);
+      } else {
+        setPage("history");
+      }
+    }
+  }, [storageReady, sessions, session, page]);
   async function persist(s: Session) {
     try {
       await db.save(s);
@@ -181,35 +257,114 @@ export default function App() {
       <header>
         <a
           className="brand"
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setPage("home");
-          }}
+          href="#/exploration"
+          onClick={() => setPage("home")}
         >
           <span className="brand-mark">S</span>SYNAPTIK
-          <span className="brand-sub">{fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}</span>
+          <span className="brand-sub">
+            {fr ? "TEST D’INTELLIGENCE COGNITIVE" : "COGNITIVE INTELLIGENCE TEST"}
+          </span>
         </a>
-        <nav aria-label="Navigation">
-          {(["home", "history", "practice", "method"] as const).map((p) => (
-            <button
-              className={page === p ? "nav-active" : ""}
-              key={p}
-              onClick={() => setPage(p)}
-            >
-              {t[p]}
-            </button>
-          ))}
-        </nav>
-        <select
-          aria-label={fr ? "Langue" : "Language"}
-          value={lang}
-          disabled={page === "test" || page === "demo"}
-          onChange={(e) => setLang(e.target.value as Lang)}
+        <div className="header-actions">
+          <select
+            aria-label={fr ? "Langue" : "Language"}
+            value={lang}
+            disabled={page === "test" || page === "demo"}
+            onChange={(e) => setLang(e.target.value as Lang)}
+          >
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+          </select>
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-label={
+              menuOpen
+                ? fr
+                  ? "Fermer le menu"
+                  : "Close menu"
+                : fr
+                  ? "Ouvrir le menu"
+                  : "Open menu"
+            }
+            aria-expanded={menuOpen}
+            aria-controls="main-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+        {menuOpen && (
+          <button
+            className="menu-backdrop"
+            type="button"
+            aria-label={fr ? "Fermer le menu" : "Close menu"}
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+        <nav
+          id="main-menu"
+          className={`burger-panel ${menuOpen ? "open" : ""}`}
+          aria-label={fr ? "Menu principal" : "Main menu"}
+          aria-hidden={!menuOpen}
         >
-          <option value="fr">FR</option>
-          <option value="en">EN</option>
-        </select>
+          <div className="menu-head">
+            <div>
+              <span className="eyebrow">SYNAPTIK</span>
+              <strong>{fr ? "Navigation" : "Navigation"}</strong>
+            </div>
+            <button
+              type="button"
+              className="menu-close"
+              aria-label={fr ? "Fermer le menu" : "Close menu"}
+              onClick={() => setMenuOpen(false)}
+            >
+              ×
+            </button>
+          </div>
+          <div className="menu-links">
+            {(
+              [
+                ["home", t.home, "01"],
+                ["setup", fr ? "Démarrer une analyse" : "Start assessment", "02"],
+                ["history", t.history, "03"],
+                ["practice", t.practice, "04"],
+                ["method", t.method, "05"],
+              ] as [Page, string, string][]
+            ).map(([target, label, number]) => {
+              const activeSection =
+                target === "home"
+                  ? ["home", "demo", "test", "result"].includes(page)
+                  : page === target;
+              return (
+                <a
+                  key={target}
+                  href={`#/${pageRoutes[target]}`}
+                  className={activeSection ? "menu-link active" : "menu-link"}
+                  onClick={() => setPage(target)}
+                >
+                  <span>{number}</span>
+                  <strong>{label}</strong>
+                  <b>↗</b>
+                </a>
+              );
+            })}
+          </div>
+          {active && (
+            <button className="menu-resume" onClick={() => open(active)}>
+              <span>{fr ? "SESSION EN COURS" : "ACTIVE SESSION"}</span>
+              <strong>
+                {t.resume} · {active.answers.length}/{counts[active.mode]}
+              </strong>
+            </button>
+          )}
+          <div className="menu-meta">
+            <span>{online ? (fr ? "EN LIGNE" : "ONLINE") : fr ? "HORS LIGNE" : "OFFLINE"}</span>
+            <span>{fr ? "DONNÉES LOCALES" : "LOCAL DATA"}</span>
+          </div>
+        </nav>
       </header>
       {error && (
         <div role="alert" className="warning">
