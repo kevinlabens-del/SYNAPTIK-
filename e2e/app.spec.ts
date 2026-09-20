@@ -107,9 +107,9 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   expect(stored.answers[5].duration).toBe(stored.answers[5].selectionTime);
   expect(stored.answers[5].duration).toBeLessThan(8000);
   const score = await page.locator(".big-score").textContent();
-  await page.getByLabel("Language").selectOption("en");
+  await page.locator("header select").selectOption("en");
   await expect(page.locator(".big-score")).toHaveText(score!);
-  await page.getByLabel("Language").selectOption("fr");
+  await page.locator("header select").selectOption("fr");
   for (const [width, height] of sizes) {
     await page.setViewportSize({ width, height });
     expect(
