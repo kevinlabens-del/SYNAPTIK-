@@ -1066,6 +1066,10 @@ export default function App() {
         <small>
           {fr ? "Expérimental · Non clinique" : "Experimental · Non-clinical"}
         </small>
+        <small className="creator-credit">
+          {fr ? "Créé par " : "Created by "}
+          <strong>CR3@TIX</strong>
+        </small>
       </footer>
     </div>
   );

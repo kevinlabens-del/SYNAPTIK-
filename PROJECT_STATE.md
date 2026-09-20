@@ -10,6 +10,7 @@
 
 - PWA React/TypeScript/Vite.
 - Interface FR/EN.
+- Mention de création CR3@TIX dans le footer.
 - Navigation multipage par routes hash compatibles GitHub Pages.
 - Menu burger latéral remplaçant les anciens onglets horizontaux.
 - Six domaines cognitifs.
@@ -74,7 +75,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Correction du cache de mise à jour : les navigations utilisent désormais une stratégie réseau d’abord lorsque l’appareil est en ligne, avec repli sur le cache hors ligne. L’enregistrement du service worker utilise `updateViaCache: "none"` et vérifie aussi les mises à jour au retour en ligne et lors d’un `pageshow`. Cela évite qu’une ancienne page HTML reste affichée après un déploiement GitHub Pages réussi.
+Ajout permanent de la mention de création dans le footer : **« Créé par CR3@TIX »** en français et **« Created by CR3@TIX »** en anglais. La mention est intégrée au design et couverte par le test navigateur.
 
 ## Prochaine priorité scientifique
 

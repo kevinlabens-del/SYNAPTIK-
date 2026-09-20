@@ -27,6 +27,7 @@ for (const [width, height] of sizes)
     await expect(
       page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
+    await expect(page.getByText(/Créé par CR3@TIX/i)).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

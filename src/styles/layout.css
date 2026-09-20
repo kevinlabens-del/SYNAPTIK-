@@ -753,3 +753,20 @@ header nav .menu-resume {
   font: 0.62rem monospace;
   letter-spacing: 0.08em;
 }
+
+
+.creator-credit {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--muted);
+  font: 0.7rem monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.creator-credit strong {
+  color: var(--cyan);
+  font-weight: 600;
+}

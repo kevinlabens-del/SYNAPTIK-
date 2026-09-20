@@ -1,10 +1,11 @@
-# SYNAPTIK — Fonctionnalités
+# SYNAPTIK TEST QI — Fonctionnalités
 
 Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours validation scientifique ou matérielle ; 🚧 amélioration possible.
 
 | Fonction | Statut | Source principale |
 |---|---:|---|
 | Interface FR/EN | ✅ | `src/app` |
+| Crédit créateur CR3@TIX dans le footer | ✅ | `src/app/App.tsx` |
 | Navigation multipage hash + menu burger | ✅ | `src/app/App.tsx` + styles |
 | Responsive mobile renforcé jusqu’à 320 px | ✅ | `src/styles/responsive.css` |
 | Six domaines cognitifs | ✅ | `src/cognitive/types.ts` |

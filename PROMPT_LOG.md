@@ -1,4 +1,18 @@
-# SYNAPTIK — Historique des demandes de développement
+# SYNAPTIK TEST QI — Historique des demandes de développement
+
+## 2026-09-20 — Mention « Créé par CR3@TIX »
+
+### Demande
+Ajouter en bas de l’application une mention indiquant que SYNAPTIK TEST QI a été créé par la marque CR3@TIX.
+
+### Action
+- ajout du crédit dans le footer sur toutes les pages ;
+- version française : « Créé par CR3@TIX » ;
+- version anglaise : « Created by CR3@TIX » ;
+- style discret cohérent avec l’identité visuelle ;
+- ajout d’un test navigateur pour éviter sa disparition lors d’une future modification.
+
+---
 
 ## 2026-09-20 — Correction du cache après déploiement
 
