@@ -28,7 +28,8 @@ for (const [width, height] of sizes)
       page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }),
     ).toBeVisible();
     await expect(page.getByText(/Créé par CR3@TIX/i)).toBeVisible();
-    const supportButton = page.locator("#cr3atix-support-button-host").locator("a");
+    const supportHost = page.locator("#cr3atix-support-button-host");
+    const supportButton = supportHost.locator("a");
     await expect(supportButton).toHaveAttribute(
       "href",
       "https://kevinlabens-del.github.io/CR3-TIX-SOUTIEN-/",
@@ -49,7 +50,8 @@ for (const [width, height] of sizes)
       "data-synaptik-page",
       "setup",
     );
-    await expect(page.locator("#cr3atix-support-button-host")).toBeVisible();
+    await expect(supportHost).toHaveAttribute("aria-hidden", "false");
+    await expect(supportButton).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -80,6 +82,8 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  const supportHost = page.locator("#cr3atix-support-button-host");
+  const supportButton = supportHost.locator("a");
   await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
   await page.getByRole("button", { name: /Rapide/i }).click();
   await page.getByRole("button", { name: /Voir les 3 exercices/ }).click();
@@ -87,18 +91,21 @@ test("complete Quick assessment, restore history, practice and offline reload", 
     await expect(
       page.getByText(`DÉMO ${n + 1}/3`, { exact: false }),
     ).toBeVisible();
-    await expect(page.locator("#cr3atix-support-button-host")).toBeHidden();
+    await expect(supportHost).toHaveAttribute("aria-hidden", "true");
+    await expect(supportButton).toBeHidden();
     await page.locator(".option").first().waitFor();
     await page.locator(".option").first().click();
     await page.getByRole("button", { name: /Valider ma réponse/ }).click();
     await page.getByRole("button", { name: /Exercice suivant/ }).click();
   }
   await expect(page.getByRole("heading", { name: /Prépare ton exploration/i })).toBeVisible();
-  await expect(page.locator("#cr3atix-support-button-host")).toBeVisible();
+  await expect(supportHost).toHaveAttribute("aria-hidden", "false");
+  await expect(supportButton).toBeVisible();
   await page.getByRole("button", { name: /Démarrer l’analyse/i }).click();
   for (let n = 0; n < 36; n++) {
     await expect(page.locator(".test-top")).toContainText(`${n + 1} / 36`);
-    await expect(page.locator("#cr3atix-support-button-host")).toBeHidden();
+    await expect(supportHost).toHaveAttribute("aria-hidden", "true");
+    await expect(supportButton).toBeHidden();
     if (n % 6 === 5) {
       await expect(page.locator(".option")).toHaveCount(0);
       if (n === 5) await page.waitForTimeout(8500);
@@ -126,7 +133,8 @@ test("complete Quick assessment, restore history, practice and offline reload", 
     }
   }
   await expect(page.getByText("Votre empreinte cognitive")).toBeVisible();
-  await expect(page.locator("#cr3atix-support-button-host")).toBeVisible();
+  await expect(supportHost).toHaveAttribute("aria-hidden", "false");
+  await expect(supportButton).toBeVisible();
   await expect(page.locator(".profile-list article")).toHaveCount(6);
   await expect(page.locator(".answer-review-item")).toHaveCount(36);
   await page.locator(".answer-review-item").first().locator("summary").click();
@@ -188,7 +196,8 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   await page.getByRole("button", { name: /Ouvrir le menu/ }).click();
   await page.getByRole("link", { name: /Entraînement/ }).click();
   await expect(page).toHaveURL(/#\/entrainement$/);
-  await expect(page.locator("#cr3atix-support-button-host")).toBeHidden();
+  await expect(supportHost).toHaveAttribute("aria-hidden", "true");
+  await expect(supportButton).toBeHidden();
   await page.locator(".option").first().click();
   await page.getByRole("button", { name: /Valider ma réponse/ }).click();
   await expect(page.locator(".feedback")).toBeVisible();

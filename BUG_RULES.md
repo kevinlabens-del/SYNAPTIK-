@@ -113,3 +113,9 @@ Chaque bug significatif corrigé doit ajouter une règle ici afin qu’il ne soi
 **Risque :** un bouton flottant externe recouvre une option, intercepte un toucher, prend le focus ou distrait pendant une tâche, notamment chronométrée.
 
 **Règle permanente :** le bouton CR3@TIX Soutien doit être totalement masqué et non focusable sur les pages Démonstration, Analyse et Entraînement, ainsi que lorsqu’un composant `.exercise` est actif. Il ne peut réapparaître que sur une page non-exercice.
+
+## BUG-022 — Faux échec de visibilité sur un hôte Shadow DOM
+
+**Risque :** un test conclut qu’un bouton flottant est invisible parce que son élément hôte n’a aucune taille, alors que le contrôle rendu dans son Shadow DOM est visible.
+
+**Règle permanente :** pour les composants Shadow DOM, tester l’état d’accessibilité de l’hôte et la visibilité du contrôle interactif réel dans le shadow root, pas la géométrie de l’hôte seul.

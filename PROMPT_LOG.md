@@ -1,5 +1,15 @@
 # SYNAPTIK TEST QI — Historique des demandes de développement
 
+## 2026-09-20 — Correction du test Shadow DOM du bouton Soutien
+
+### Incident
+La première validation de la protection des exercices a échoué car Playwright testait la visibilité géométrique du conteneur Shadow DOM, qui n’a pas de dimensions propres même lorsque son lien flottant est visible.
+
+### Correction
+Le test vérifie désormais l’attribut `aria-hidden` du conteneur et la visibilité réelle du lien « Soutenir » dans le Shadow DOM.
+
+---
+
 ## 2026-09-20 — Protection du bouton Soutien pendant les exercices
 
 ### Demande
