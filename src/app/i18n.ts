@@ -70,7 +70,7 @@ export const labels = {
     practice: "Entraînement",
     method: "Méthodologie",
     start: "COMMENCER L’ANALYSE",
-    local: "LOCAL FIRST · AUCUNE TRANSMISSION",
+    local: "DONNÉES LOCALES · AUCUNE TRANSMISSION",
     next: "Valider ma réponse",
     resume: "Reprendre mon évaluation",
     experimental: "ÉDITION EXPÉRIMENTALE / 01",
