@@ -15,7 +15,8 @@ Légende : ✅ fonction présente ; 🧪 présente mais nécessitant toujours va
 | Posterior discret / EAP / SE | ✅ | moteur |
 | Intervalles postérieurs par domaine v1.1 | ✅ | moteur |
 | Percentile théorique | 🧪 | moteur |
-| Démonstrations | ✅ | `src/app` |
+| Démonstrations facultatives, séparées du démarrage | ✅ | `src/app` |
+| Démarrage direct de l’évaluation après préparation | ✅ | `src/app` |
 | Entraînement indépendant | ✅ | `src/app` |
 | Tâches de vitesse avec écran ready | ✅ | v1.1 |
 | Sauvegarde IndexedDB | ✅ | `src/storage` |

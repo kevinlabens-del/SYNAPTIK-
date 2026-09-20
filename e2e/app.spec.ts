@@ -39,7 +39,7 @@ test("complete Quick assessment, restore history, practice and offline reload", 
   await page.goto("/");
   await page.getByRole("button", { name: /COMMENCER L’ANALYSE/ }).click();
   await page.getByRole("button", { name: /Rapide/i }).click();
-  await page.getByRole("button", { name: /3 exercices/ }).click();
+  await page.getByRole("button", { name: /Voir les 3 exercices/ }).click();
   for (let n = 0; n < 3; n++) {
     await expect(
       page.getByText(`DÉMO ${n + 1}/3`, { exact: false }),
@@ -49,6 +49,8 @@ test("complete Quick assessment, restore history, practice and offline reload", 
     await page.getByRole("button", { name: /Valider ma réponse/ }).click();
     await page.getByRole("button", { name: /Exercice suivant/ }).click();
   }
+  await expect(page.getByRole("heading", { name: /Prépare ton exploration/i })).toBeVisible();
+  await page.getByRole("button", { name: /Démarrer l’analyse/i }).click();
   for (let n = 0; n < 36; n++) {
     await expect(page.locator(".test-top")).toContainText(`${n + 1} / 36`);
     if (n % 6 === 5) {

@@ -13,7 +13,7 @@
 - Six domaines cognitifs.
 - Modes Quick 36, Standard 72 et Deep 120.
 - Sélection adaptative.
-- Démonstrations avant évaluation.
+- Démonstrations facultatives, accessibles séparément du démarrage de l’évaluation.
 - Entraînement indépendant.
 - Sauvegarde et reprise via IndexedDB.
 - Historique.
@@ -71,7 +71,7 @@ Aucun bug bloquant n’est consigné ici. Les nouveaux bugs doivent être ajout�
 
 ## Dernière modification importante
 
-Correction de la localisation française : les textes d’interface auparavant codés en anglais sont désormais traduits lorsque FR est sélectionné, tout en conservant le mode EN. Le défaut de validation E2E provoqué par le renommage accessible « Language » → « Langue » a été corrigé en ciblant le sélecteur de langue de façon indépendante du texte affiché.
+Séparation du démarrage et des démonstrations : après choix du mode, « Démarrer l’analyse » lance directement la session notée. Un second bouton « Voir les 3 exercices de démonstration » ouvre trois exercices facultatifs et non notés ; à leur fin, l’utilisateur revient à la préparation sans création automatique d’une session.
 
 ## Prochaine priorité scientifique
 

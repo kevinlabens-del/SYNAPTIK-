@@ -1,5 +1,21 @@
 # SYNAPTIK — Historique des demandes de développement
 
+## 2026-09-20 — Séparation analyse / démonstrations
+
+### Demande
+Afficher deux boutons distincts après la sélection du mode : un pour démarrer réellement l’analyse et un pour consulter les trois exercices de démonstration.
+
+### Action
+- « Démarrer l’analyse » crée immédiatement la session et lance le test sélectionné.
+- « Voir les 3 exercices de démonstration » ouvre uniquement les exercices non notés.
+- Après la troisième démonstration, retour à la page de préparation au lieu de démarrer automatiquement l’évaluation.
+- Le test E2E vérifie désormais les deux parcours.
+
+### Résultat
+Les démonstrations deviennent réellement facultatives et restent séparées de l’évaluation notée.
+
+---
+
 ## 2026-09-20 — Correction du test E2E de langue
 
 ### Incident

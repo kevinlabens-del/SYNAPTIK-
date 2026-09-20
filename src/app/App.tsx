@@ -374,18 +374,26 @@ export default function App() {
                 ? "Autoriser la préparation d’un export anonyme de calibration. Aucun envoi automatique."
                 : "Allow preparation of an anonymous calibration export. Nothing is sent automatically."}
             </label>
-            <button
-              className="primary"
-              onClick={() => {
-                setDemo(0);
-                setPage("demo");
-              }}
-            >
+            <div className="actions">
+              <button className="primary" onClick={() => void start()}>
+                {fr ? "Démarrer l’analyse" : "Start assessment"} <span>→</span>
+              </button>
+              <button
+                onClick={() => {
+                  setDemo(0);
+                  setPage("demo");
+                }}
+              >
+                {fr
+                  ? "Voir les 3 exercices de démonstration"
+                  : "View 3 demonstration exercises"}
+              </button>
+            </div>
+            <p className="small">
               {fr
-                ? "Découvrir les 3 exercices de démonstration"
-                : "Try 3 demonstration exercises"}{" "}
-              →
-            </button>
+                ? "Les démonstrations sont facultatives et non notées. Elles ne modifient jamais ton score."
+                : "Demonstrations are optional and unscored. They never affect your score."}
+            </p>
           </section>
         )}
         {page === "demo" && (
@@ -406,7 +414,7 @@ export default function App() {
               }
               onAnswer={() => {
                 if (demo < 2) setDemo(demo + 1);
-                else void start();
+                else setPage("setup");
               }}
             />
           </section>
