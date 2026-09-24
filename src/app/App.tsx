@@ -79,6 +79,7 @@ export default function App() {
   const [demo, setDemo] = useState(0);
   const [resumed, setResumed] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
+  const [shareNotice, setShareNotice] = useState("");
   const bank = useMemo(() => makeBank(lang), [lang]);
   const t = labels[lang],
     fr = lang === "fr";
@@ -249,6 +250,49 @@ export default function App() {
     setSession(s);
     setPage(s.status === "complete" ? "result" : "test");
   }
+  /* CR3ATIX_SHARE_V1 — aucun résultat, âge, score ou état de session n'est partagé. */
+  async function shareApplication() {
+    const url = "https://kevinlabens-del.github.io/SYNAPTIK-/";
+    const copied = fr ? "Lien de SYNAPTIK copié" : "SYNAPTIK link copied";
+    const notify = (message: string) => {
+      setShareNotice(message);
+      window.setTimeout(() => setShareNotice(""), 2500);
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "SYNAPTIK TEST QI",
+          text: fr
+            ? "Découvre SYNAPTIK TEST QI, une évaluation cognitive expérimentale et privée."
+            : "Discover SYNAPTIK TEST QI, a private experimental cognitive assessment.",
+          url,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    try {
+      if (window.isSecureContext && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        notify(copied);
+        return;
+      }
+    } catch {}
+    const field = document.createElement("textarea");
+    field.value = url;
+    field.readOnly = true;
+    field.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+    document.body.appendChild(field);
+    field.select();
+    field.setSelectionRange(0, field.value.length);
+    let didCopy = false;
+    try { didCopy = document.execCommand("copy"); } catch {}
+    field.remove();
+    if (didCopy) notify(copied);
+    else window.prompt(fr ? "Copie ce lien pour partager SYNAPTIK :" : "Copy this link to share SYNAPTIK:", url);
+  }
+
   const item = session
     ? bank.find((i) => i.id === session.currentId)
     : undefined;
@@ -351,6 +395,17 @@ export default function App() {
                 </a>
               );
             })}
+            <button
+              type="button"
+              className="menu-link"
+              onClick={() => void shareApplication()}
+              aria-label={fr ? "Partager SYNAPTIK TEST QI" : "Share SYNAPTIK TEST QI"}
+              title={fr ? "Partager l’application" : "Share the app"}
+            >
+              <span>06</span>
+              <strong>{fr ? "Partager l’application" : "Share the app"}</strong>
+              <b>↗</b>
+            </button>
           </div>
           {active && (
             <button className="menu-resume" onClick={() => open(active)}>
@@ -363,6 +418,7 @@ export default function App() {
           <div className="menu-meta">
             <span>{online ? (fr ? "EN LIGNE" : "ONLINE") : fr ? "HORS LIGNE" : "OFFLINE"}</span>
             <span>{fr ? "DONNÉES LOCALES" : "LOCAL DATA"}</span>
+            {shareNotice && <span role="status" aria-live="polite">{shareNotice}</span>}
           </div>
         </nav>
       </header>
